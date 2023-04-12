@@ -36,6 +36,15 @@ public class GameBoard {
 			if(event.getCode() == KeyCode.W) {
 				controller.movePlayer("W");
 			}
+			if(event.getCode() == KeyCode.A) {
+				controller.movePlayer("A");
+			}
+			if(event.getCode() == KeyCode.S) {
+				controller.movePlayer("S");
+			}
+			if(event.getCode() == KeyCode.D) {
+				controller.movePlayer("D");
+			}
 			
 		});
 		

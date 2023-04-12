@@ -123,12 +123,24 @@ public class GameController {
 	}
 
 	public void movePlayer(String code) {
-		if(code.equals("W")) {
-			TranslateTransition translate = new TranslateTransition();
-			translate.setNode(this.player.getPlayerNode());
-			translate.setByY(cellH);
-			translate.play();
+		TranslateTransition translate = new TranslateTransition();
+		translate.setNode(this.player.getPlayerNode());
+		
+		switch(code){
+			case "W":
+				translate.setByY(cellH * -1);				
+				break;
+			case "A":
+				translate.setByX(cellW * -1);				
+				break;
+			case "S":
+				translate.setByY(cellH);	
+				break;
+			case "D":
+				translate.setByX(cellH);	
+				break;
 		}
+		translate.play();
 	}
 
 	// TODO:
