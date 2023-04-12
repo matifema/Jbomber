@@ -1,16 +1,23 @@
 package entities.game;
 
 import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.Node;
 import javafx.scene.image.*;
-import util.timer.CountDown;
+
 import java.util.ArrayList;
 
+import util.timer.CountDown;
+import entities.player.*;
 
 public class GameController {
 	@FXML GridPane grid;
@@ -19,11 +26,13 @@ public class GameController {
 	private final int countTime = 200, nWalls = 50;
 	private final String lv = "LIVES: ", tm = "TIME: ", sc = "SCORE: ";
 	private final double cellW = 800/15, cellH = 800/17;
+	private final Set<List<Integer>> occupiedCell = new HashSet<List<Integer>>();
+	private Player player;
 	
 	public GameController() {
 	}
 	
-	public void drawHeading() {
+	public void renderHeading() {
 		// Creo intestazione (2 righe nere sul top)
 		for(int i=0; i < 2; i++) {
 			for(int j=0; j < 15; j++) {
@@ -35,28 +44,28 @@ public class GameController {
 		}
 	}
 	
-	public void drawLevel() { 
-		// ho 224 tiles libere -> 112 muri
+	public void renderLevel() {
+		// walls randomici
 		for (int i = 0; i<nWalls; i++) {
-			drawWall();			
+			renderWall();			
 		}
-		drawBarriers();
+		renderBarriers();
 	}
 	
-	public void drawBarriers() {
-		// ho un area iniziale di 16x14
-		// lasciando una riga e una colonna ai lati diventa 14x12
-		
+	public void renderBarriers() {
+		// lasciando spazio ai lati
 		for(int y = 3; y<16; y++) {
 			for(int x = 1; x<15; x++) {
 				if((x+1)%2==0 && y%2 != 0) {
-					drawBarrier(x, y);
+					renderBarrier(x, y);
+					
+					this.occupiedCell.add(List.of(x,y));
 				}
 			}
 		}
 	}
 	
-	public void drawBarrier(int x, int y) {
+	public void renderBarrier(int x, int y) {
 		Image image = new Image("/barrier.png");
 		ImageView imv = new ImageView();
 		imv.setImage(image);
@@ -67,7 +76,7 @@ public class GameController {
 		grid.add(imv, x, y);
 	}
 
-	public void drawWall() {
+	public void renderWall() {
 		Image image = new Image("/wall.png");
 		ImageView imv = new ImageView();
 		imv.setImage(image);
@@ -83,8 +92,10 @@ public class GameController {
 		
 		//imv.toFront();
 		grid.add(imv, x, y);
-		
+				
 		//System.out.print("coord: " + x + " " + y);
+		
+		this.occupiedCell.add(List.of(x,y));
 	}
 	
 	public void clearLevel() {
@@ -104,6 +115,20 @@ public class GameController {
 		CountDown task = new CountDown(countTime, time, tm);
 		Thread thread = new Thread(task);
 		thread.start();
+	}
+
+	public void renderPlayer() {
+		this.player = new Player(cellW, cellH, this.occupiedCell);
+		this.grid.add(player.getPlayerNode(), player.getX(), player.getY());
+	}
+
+	public void movePlayer(String code) {
+		if(code.equals("W")) {
+			TranslateTransition translate = new TranslateTransition();
+			translate.setNode(this.player.getPlayerNode());
+			translate.setByY(cellH);
+			translate.play();
+		}
 	}
 
 	// TODO:

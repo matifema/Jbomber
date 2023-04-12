@@ -16,9 +16,11 @@ public class GameBoard {
 		Parent root = fxmlLoader.load();
 		GameController controller = fxmlLoader.getController();
 		
-		controller.drawHeading();
-		controller.drawLevel();
+		controller.renderHeading();
+		controller.renderLevel();
 		controller.getReady();
+		controller.renderPlayer();
+		
 		controller.startCountDown();
 		
 		// set scene
@@ -29,9 +31,14 @@ public class GameBoard {
 		this.scene.setOnKeyPressed(event -> {
 			if(event.getCode() == KeyCode.ENTER) {
 				controller.clearLevel();
-				controller.drawLevel();
+				controller.renderLevel();
 			}
+			if(event.getCode() == KeyCode.W) {
+				controller.movePlayer("W");
+			}
+			
 		});
+		
 	}
 	
 	public Scene getScene() {
