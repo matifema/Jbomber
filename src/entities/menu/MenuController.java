@@ -15,7 +15,7 @@ public class MenuController {
 	@FXML
 	Text playerProfile;
 
-	private int selected = 0;
+	private int selected = 1;
 
 	public MenuController() {
 	}
@@ -39,29 +39,11 @@ public class MenuController {
 	}
 
 	public void updateSelection() {
-		switch (selected) {
-		case 1: // new game
-			changeTextColor(newGame, "red");
-			changeTextColor(goblinMode, "black");
-			changeTextColor(playerProfile, "black");
-			break;
-
-		case 2: // goblin mode
-			changeTextColor(newGame, "black");
-			changeTextColor(goblinMode, "red");
-			changeTextColor(playerProfile, "black");
-			break;
-
-		case 3: // player profile
-			changeTextColor(newGame, "black");
-			changeTextColor(goblinMode, "black");
-			changeTextColor(playerProfile, "red");
-			break;
-		default:
-			// nd
-			break;
-		}
+	    changeTextColor(newGame, selected == 1 ? "red" : "black");
+	    changeTextColor(goblinMode, selected == 2 ? "red" : "black");
+	    changeTextColor(playerProfile, selected == 3 ? "red" : "black");
 	}
+
 
 	private void changeTextColor(Text text, String color) {
 		text.setStyle("-fx-fill: " + color + ";");

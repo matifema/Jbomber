@@ -19,7 +19,7 @@ public class MainMenu {
 
 		// set scene
 		this.scene = new Scene(root);
-
+		
 		// key handling
 		scene.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.UP) {

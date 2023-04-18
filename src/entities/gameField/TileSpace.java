@@ -27,8 +27,9 @@ public class TileSpace {
 		tilePane.setPrefRows(nRows);
 		tilePane.setPrefColumns(nCols);
 		tilePane.setMinWidth(850);
+		
 		populateSpace(tilePane);
-		// this.scene = new Scene(tilePane);
+		
 	}
 
 	public void populateSpace(TilePane space) {

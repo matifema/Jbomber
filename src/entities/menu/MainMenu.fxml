@@ -14,17 +14,12 @@
             <Image url="@../../resources/jbomberman.png" />
          </image>
       </ImageView>
-      <Label layoutX="77.0" layoutY="608.0" prefHeight="179.0" prefWidth="714.0" text="JBomberman">
-         <font>
-            <Font name="Computer Pixel-7" size="170.0" />
-         </font>
-      </Label>
-      <Text fx:id="newGame" layoutX="347.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- New Game">
+      <Text fx:id="newGame" fill="RED" layoutX="347.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- New Game">
          <font>
             <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
-      <Text fx:id="goblinMode" layoutX="347.0" layoutY="422.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Goblin Mode">
+      <Text fx:id="goblinMode" layoutX="347.0" layoutY="419.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Goblin Mode">
          <font>
             <Font name="Computer Pixel-7" size="77.0" />
          </font>
@@ -34,5 +29,10 @@
             <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
+      <Label alignment="CENTER" blendMode="DARKEN" contentDisplay="CENTER" layoutX="43.0" layoutY="614.0" prefHeight="179.0" prefWidth="714.0" text="JBomberman">
+         <font>
+            <Font name="Computer Pixel-7" size="170.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

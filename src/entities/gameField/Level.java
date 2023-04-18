@@ -1,8 +1,12 @@
 package entities.gameField;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,7 +22,7 @@ public class Level {
 	private Scene scene;
 	private Player player;
 	private HBox text = new HBox();
-	private int nCols = 17, nRows = 18, scorePoints = 0, nWalls = 50;
+	private int nCols = 17, nRows = 18, scorePoints = 0, nWalls = 50, explosionPower = 1;
 	private TileSpace tileSpace = new TileSpace(nCols, nRows);
 	private HashMap<List<Integer>, Rectangle> levelMap = tileSpace.getMap();
 	private StackPane parentContainer = new StackPane();
@@ -127,9 +131,35 @@ public class Level {
 	}
 
 	private void placeBomb() {
-		this.placedBomb = new Bomb(this, levelMap, this.player.getX(), this.player.getY());
+		this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY());
 	}
 
+	public List<Rectangle> getNearWalls(int x, int y) {
+		int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+		List<Rectangle> nearWalls = new LinkedList<>();
+		Set<List<Integer>> visited = new HashSet<>();
+		List<Integer> pos = List.of(x, y);
+		nearWalls.add(levelMap.get(pos));
+		visited.add(pos);
+
+		for (int[] dir : directions) {
+			pos = List.of(x, y);
+			for (int i = 1; i <= explosionPower; i++) {
+				pos = Arrays.asList(pos.get(0) + dir[0], pos.get(1) + dir[1]);
+				if (!visited.add(pos)) {
+					break;
+				}
+				Rectangle wall = levelMap.get(pos);
+				if (wall.getFill().equals(Color.BLACK)) {
+					break;
+				}
+				nearWalls.add(wall);
+			}
+		}
+
+		return nearWalls;
+	}
+	
 	public void clearLevel() {
 		for (int y = 0; y < nRows; y++) {
 			for (int x = 0; x < nCols; x++) {
@@ -145,7 +175,11 @@ public class Level {
 	public Scene getScene() {
 		return this.scene;
 	}
-
+	
+	public HashMap<List<Integer>, Rectangle> getMap(){
+		return this.levelMap;
+	}
+	
 	public void setScore(int points) {
 		scorePoints += points;
 		score.setText(" score: " + scorePoints);
