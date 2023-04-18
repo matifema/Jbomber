@@ -3,10 +3,9 @@ package entities.menu;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
-
 import java.io.IOException;
 
-import entities.game.GameBoard;
+import entities.gameField.Level;
 
 public class MenuController {
 	@FXML Text newGame;
@@ -69,8 +68,8 @@ public class MenuController {
 	public Scene select() throws IOException {
 		switch (selected) {
 			case 1:
-				GameBoard gm = new GameBoard();
-				return gm.getScene();
+				Level level = new Level();
+				return level.getScene();
 			case 2:
 				return null;
 			case 3:

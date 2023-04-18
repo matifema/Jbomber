@@ -13,12 +13,13 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
 
     	MainMenu menu = new MainMenu();
-        
     	Scene scene = menu.getScene();
+		
     	
         stage.setTitle("JBomber");
         stage.setScene(scene);
         stage.sizeToScene();
+        stage.setMaxWidth(850);
         stage.show();
     }
 

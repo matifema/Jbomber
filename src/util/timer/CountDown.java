@@ -8,19 +8,20 @@ public class CountDown extends Task<Void> {
 	private final Text text;
 	private final String baseText;
 	
-	
 	public CountDown(int sec, Text txt, String bt) {
 		this.seconds = sec;
 		this.text = txt;
 		this.baseText = bt;
 	}
+	
 
 	@Override
 	protected Void call() throws Exception {
 		for (int i = seconds; i >= 0; i--) {
             Thread.sleep(1000); // attesa di un secondo
             updateMessage(Integer.toString(i)); // aggiorna il messaggio con il tempo rimanente
-        }
+		}
+		
 		return null;
 	}
 	
