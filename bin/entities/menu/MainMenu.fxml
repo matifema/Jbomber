@@ -9,29 +9,29 @@
 
 <AnchorPane maxHeight="800" maxWidth="800" minHeight="800" minWidth="800" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="entities.menu.MenuController">
    <children>
-      <ImageView fitHeight="635.0" fitWidth="508.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="635.0" fitWidth="508.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../resources/jbomberman.png" />
          </image>
       </ImageView>
-      <Label layoutX="77.0" layoutY="608.0" prefHeight="168.0" prefWidth="662.0" text="JBomberman">
+      <Label layoutX="77.0" layoutY="608.0" prefHeight="179.0" prefWidth="714.0" text="JBomberman">
          <font>
-            <Font size="96.0" />
+            <Font name="Computer Pixel-7" size="170.0" />
          </font>
       </Label>
-      <Text fx:id="newGame" layoutX="394.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- New Game">
+      <Text fx:id="newGame" layoutX="347.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- New Game">
          <font>
-            <Font size="46.0" />
+            <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
-      <Text fx:id="goblinMode" layoutX="391.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Goblin Mode">
+      <Text fx:id="goblinMode" layoutX="347.0" layoutY="422.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Goblin Mode">
          <font>
-            <Font size="46.0" />
+            <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
-      <Text fx:id="playerProfile" layoutX="392.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Player Profile">
+      <Text fx:id="playerProfile" layoutX="347.0" layoutY="486.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Player Profile">
          <font>
-            <Font size="46.0" />
+            <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
    </children>

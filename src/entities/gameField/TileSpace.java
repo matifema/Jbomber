@@ -1,7 +1,5 @@
 package entities.gameField;
 
-import javafx.scene.shape.*;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,25 +10,25 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class TileSpace {
-
-	private HashMap<List<Integer>, Rectangle> map = new HashMap<List<Integer>, Rectangle>();
+	private HashMap<List<Integer>, Rectangle> map = new HashMap<>();
 	private TilePane tilePane = new TilePane();
-	private int nCols , nRows;
+	private int nCols, nRows;
 	private Scene scene;
 
 	public TileSpace(int nCols, int nRows) {
 		this.nCols = nCols;
 		this.nRows = nRows;
-		
+
 		tilePane.setOrientation(Orientation.VERTICAL);
-		tilePane.setTileAlignment(Pos.CENTER);		
+		tilePane.setTileAlignment(Pos.CENTER);
 		tilePane.setPrefRows(nRows);
 		tilePane.setPrefColumns(nCols);
 		tilePane.setMinWidth(850);
 		populateSpace(tilePane);
-		//this.scene = new Scene(tilePane);
+		// this.scene = new Scene(tilePane);
 	}
 
 	public void populateSpace(TilePane space) {
@@ -41,7 +39,7 @@ public class TileSpace {
 				Rectangle tile = createTile();
 
 				space.getChildren().add(tile);
-				map.put(List.of(x,y), tile);
+				map.put(List.of(x, y), tile);
 			}
 		}
 	}
@@ -60,10 +58,10 @@ public class TileSpace {
 		return this.scene;
 	}
 
-	public HashMap<List<Integer>,Rectangle> getMap(){
+	public HashMap<List<Integer>, Rectangle> getMap() {
 		return this.map;
 	}
-	
+
 	public ObservableList<?> getList() {
 		return tilePane.getChildren();
 	}
