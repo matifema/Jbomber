@@ -4,63 +4,68 @@ import java.util.HashMap;
 import java.util.List;
 
 import javafx.animation.TranslateTransition;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 public class Player {
-	private Rectangle playerBox;
-	public int spawnX, spawnY, currentX, currentY;
-	private HashMap<List<Integer>, Rectangle> levelMap;
+	private ImageView playerBox;
+	private Image playerImg = new Image(getClass().getResourceAsStream("/resources/player-static.png")),
+				  playerDeath1 = new Image(getClass().getResourceAsStream("/resources/player-death-1.png")),
+				  playerDeath2 = new Image(getClass().getResourceAsStream("/resources/player-death-2.png"));
+	
+	private HashMap<List<Integer>, ImageView> levelMap;
+	public int currentX, currentY;
 
-	public Player(int x, int y, Rectangle player, HashMap<List<Integer>, Rectangle> levelMap) {
+	public Player(int x, int y, HashMap<List<Integer>, ImageView> levelMap) {
 		this.levelMap = levelMap;
 		this.currentX = x;
 		this.currentY = y;
 
-		this.playerBox = player;
-		spawnPlayer(this.playerBox);
+		spawnPlayer();
 	}
 
-	private void spawnPlayer(Rectangle playerBox2) {
-		// tutto cio per non avere glitch col piazzamento della bomba nello spawn player
-
-		this.playerBox.setViewOrder(-1);
-
-		int x = -16, y = 2;
+	private void spawnPlayer() {
+		// spawn player outside level and translate over
+		
+		this.playerBox = new ImageView(playerImg);
+		this.playerBox.setFitHeight(50);
+		this.playerBox.setFitWidth(50);
 
 		TranslateTransition translate = new TranslateTransition();
 		translate.setNode(this.playerBox);
 
-		translate.setByX((x + currentX - 1) * 50);
-		translate.setByY((y + currentY - 2) * 50);
+		translate.setByX((-17 + currentX) * 50);
+		translate.setByY((currentY) * 50);
 
 		translate.setDuration(Duration.millis(1));
 		translate.play();
 	}
+	
+	public void dieEvent() {
+		this.playerBox.setImage(playerDeath1);
+		
+		new java.util.Timer().schedule(new java.util.TimerTask() {
+			@Override
+			public void run() {
+				die();
+			}
+		}, 800);
+	}
+	
+	private void die() {
+		this.playerBox.setImage(playerDeath2);
+	}
 
-	public void movePlayer(String code) {
+	public void movePlayer(int x, int y) {
 		TranslateTransition translate = new TranslateTransition();
 		translate.setNode(this.playerBox);
 
-		switch (code) {
-		case "W":
-			translate.setByY(-50);
-			currentY += -1;
-			break;
-		case "A":
-			translate.setByX(-50);
-			currentX += -1;
-			break;
-		case "S":
-			translate.setByY(50);
-			currentY += 1;
-			break;
-		case "D":
-			translate.setByX(50);
-			currentX += 1;
-			break;
-		}
+		currentX += x;
+		currentY += y;
+		
+		translate.setByX(x*50);
+		translate.setByY(y*50);
 		translate.setDuration(Duration.millis(1));
 		translate.play();
 
@@ -68,12 +73,14 @@ public class Player {
 	}
 
 	public boolean isMoveValid(int deltaX, int deltaY) {
-		// se next position ha tile di colore verde o purple (start)
-		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getFill().equals(Color.GREEN)
-				|| this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getFill().equals(Color.PURPLE);
+		if(currentX+deltaX > 17 || currentY+deltaY > 16) {
+			return false;
+		}
+				
+		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null; // TODO da modificare se vogliamo mettere sfondo
 	}
 
-	public Rectangle getPlayerNode() {
+	public ImageView getPlayerNode() {
 		return this.playerBox;
 	}
 
@@ -83,5 +90,20 @@ public class Player {
 
 	public int getY() {
 		return this.currentY;
+	}
+
+	public void damageAnimation(){
+		for (int i = 0; i<5; i++) {
+			this.playerBox.setImage(null);
+			new java.util.Timer().schedule(new java.util.TimerTask() {
+				@Override
+				public void run() {
+					spriteBlink();
+				}
+			}, 50);
+		}
+	}
+	private void spriteBlink() {
+		this.playerBox.setImage(playerImg);
 	}
 }

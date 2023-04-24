@@ -2,6 +2,8 @@ package entities.menu;
 
 import java.io.IOException;
 
+import entities.audio.AudioManager;
+
 import entities.gameField.Level;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -14,7 +16,8 @@ public class MenuController {
 	Text goblinMode;
 	@FXML
 	Text playerProfile;
-
+	
+	private AudioManager audio = new AudioManager();
 	private int selected = 1;
 
 	public MenuController() {
@@ -39,6 +42,8 @@ public class MenuController {
 	}
 
 	public void updateSelection() {
+		audio.playSelect();
+		
 	    changeTextColor(newGame, selected == 1 ? "red" : "black");
 	    changeTextColor(goblinMode, selected == 2 ? "red" : "black");
 	    changeTextColor(playerProfile, selected == 3 ? "red" : "black");
