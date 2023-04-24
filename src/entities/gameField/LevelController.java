@@ -29,7 +29,7 @@ public class LevelController {
 	TilePane tilePane;
 
 	Player player;
-	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 5;
+	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 3, livesScore = 5;
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private Bomb placedBomb;
 	private AudioManager audio = new AudioManager();

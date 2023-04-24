@@ -2,7 +2,6 @@ package entities.gameField;
 
 import java.io.IOException;
 
-import entities.audio.AudioManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +11,11 @@ import javafx.scene.input.KeyCode;
 public class Level {
 	private LevelController controller;
 	private Scene scene;
+	
+	// TODO::
+	// 1. esplosione bomba in coordinata bomba
+	// 2. errore collisione con hud 
+	// 3. glitch bomba in hud 
 
 	public Level() throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(Level.class.getResource("Level.fxml"));
