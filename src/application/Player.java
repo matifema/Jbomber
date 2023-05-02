@@ -19,11 +19,11 @@ public class Player {
 	public int currentX, currentY;
 	private Level level;
 
-	public Player(int x, int y, HashMap<List<Integer>, ImageView> levelMap, Level level) {
+	public Player(HashMap<List<Integer>, ImageView> levelMap, Level level) {
 		this.levelMap = levelMap;
 		this.level = level;
-		this.currentX = x;
-		this.currentY = y;
+		this.currentX = 0;
+		this.currentY = 0;
 
 		spawnPlayer();
 	}

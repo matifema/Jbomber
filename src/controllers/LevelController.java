@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.eventbus.*;
-
 import application.Bomb;
+import application.Enemies;
 import application.Player;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -33,7 +31,6 @@ public class LevelController {
 	@FXML
 	TilePane tilePane;
 
-	private Scene scene;
 	private Player player;
 	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 1;
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
@@ -120,10 +117,27 @@ public class LevelController {
 		
 		this.lives.setText("" + livesScore);
 	}
+	
+	public void renderEnemies(Enemies enemies) {
+		Random rand = new Random();
+		int x, y;
+
+		do {
+			x = rand.nextInt(1, nCols - 1);
+			y = rand.nextInt(3, nRows - 1);
+
+		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y).contains(null)));
+
+		enemies.currentX = x;
+		enemies.currentY = y;
+		enemies.spawnEnemy();
+
+		tilePane.getChildren().add(enemies.getEnemyNode());
+	}
 
 	public void placeBomb() {
 		if (this.placedBomb == null || this.placedBomb.isExploded) {
-			this.placedBomb = new Bomb(this, this.wall, this.player.getX(), this.player.getY());
+			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY());
 		}
 	}
 
@@ -165,7 +179,7 @@ public class LevelController {
 		for (int y = 0; y < nRows; y++) {
 			for (int x = 0; x < nCols; x++) {
 				if (map.get(List.of(x, y)).getImage() != wall) {
-					map.get(List.of(x, y)).setImage(null); // TODO da cambiare con grass
+					map.get(List.of(x, y)).setImage(null);
 				}
 			}
 		}
@@ -211,6 +225,10 @@ public class LevelController {
 			}
 			
 		}
+	}
+
+	public TilePane getTilePane() {
+		return this.tilePane;
 	}
 	
 }

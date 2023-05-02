@@ -16,10 +16,10 @@ public class Bomb {
 	private LevelController lvl;
 	private Image wall, boom;
 
-	public Bomb(LevelController level, Image wall,  int placedX, int placedY) {
+	public Bomb(LevelController level,  int placedX, int placedY) {
 		this.boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
+		this.wall = new Image(getClass().getResourceAsStream("/resources/wall.png"));
 		this.map = level.getMap();
-		this.wall = wall;
 		this.lvl = level;
 		this.x = placedX;
 		this.y = placedY;
