@@ -2,7 +2,6 @@ package application;
 	
 import java.io.*;
 
-import entities.menu.MainMenu;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -14,7 +13,6 @@ public class Main extends Application {
 
     	MainMenu menu = new MainMenu();
     	Scene scene = menu.getScene();
-		
     	
         stage.setTitle("JBomber");
         stage.setScene(scene);

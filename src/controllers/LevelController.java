@@ -1,4 +1,4 @@
-package entities.gameField;
+package controllers;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import entities.audio.AudioManager;
+import com.google.common.eventbus.*;
+
+import application.Bomb;
+import application.Player;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -19,6 +23,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
+import util.timer.AudioManager;
 
 public class LevelController {
 	@FXML
@@ -28,8 +33,9 @@ public class LevelController {
 	@FXML
 	TilePane tilePane;
 
-	Player player;
-	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 3, livesScore = 5;
+	private Scene scene;
+	private Player player;
+	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 1;
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private Bomb placedBomb;
 	private AudioManager audio = new AudioManager();
@@ -39,11 +45,7 @@ public class LevelController {
 			wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
 
 	public LevelController() {
-		this.audio.playSoundtrack(false);
-	}
-	
-	public void initLives() {
-		this.lives.setText("" + livesScore);
+		this.audio.playSoundtrack(true);
 	}
 
 	public void populateSpace() {
@@ -100,7 +102,7 @@ public class LevelController {
 		}
 	}
 
-	public void renderPlayer() {
+	public void renderPlayer(Player player) {
 		Random rand = new Random();
 		int x, y;
 
@@ -108,11 +110,15 @@ public class LevelController {
 			x = rand.nextInt(1, nCols - 1);
 			y = rand.nextInt(3, nRows - 1);
 
-		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearWalls(x, y).contains(null)));
+		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y).contains(null)));
 
-		this.player = new Player(x, y, map);
+		player.currentX = x;
+		player.currentY = y;
+		player.spawnPlayer();
 
 		tilePane.getChildren().add(player.getPlayerNode());
+		
+		this.lives.setText("" + livesScore);
 	}
 
 	public void placeBomb() {
@@ -121,7 +127,7 @@ public class LevelController {
 		}
 	}
 
-	public List<ImageView> getNearWalls(int x, int y) {
+	public List<ImageView> getNearTiles(int x, int y) {
 		int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 		List<ImageView> nearWalls = new LinkedList<>();
 		Set<List<Integer>> visited = new HashSet<>();
@@ -138,6 +144,11 @@ public class LevelController {
 					break;
 				}
 				ImageView wall = map.get(pos);
+
+				if (wall == null) {
+					continue;
+				}
+				
 				if (wall.getImage() != null) {
 					if (wall.getImage().equals(border)) {
 						break;
@@ -171,8 +182,8 @@ public class LevelController {
 		this.score.setText("" + scorePoints);
 	}
 
-	public Player getPlayer() {
-		return player;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public void movePlayer(int x, int y) {
@@ -185,10 +196,12 @@ public class LevelController {
 
 	public void checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {
-			if(Integer.parseInt(this.lives.getText()) == 0) {
+			if(Integer.parseInt(this.lives.getText()) == 1) {
+				this.livesScore--;
 				this.player.dieEvent();
-				this.audio.playSoundtrack(true);
-				this.audio.playGameOver();				
+				this.audio.playSoundtrack(false);
+				this.audio.playGameOver();
+				
 			}
 			else {
 				this.audio.playDamageTaken();
@@ -199,5 +212,5 @@ public class LevelController {
 			
 		}
 	}
-
+	
 }

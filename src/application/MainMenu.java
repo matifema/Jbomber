@@ -1,4 +1,4 @@
-package entities.menu;
+package application;
 
 import java.io.IOException;
 
@@ -8,12 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
+import controllers.MenuController;
+
 public class MainMenu {
 	private Scene scene;
 
 	public MainMenu() throws IOException {
 		// loading MENU fxml and css
-		FXMLLoader fxmlLoader = new FXMLLoader(MainMenu.class.getResource("MainMenu.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/MainMenu.fxml"));
 		Parent root = fxmlLoader.load();
 		MenuController controller = fxmlLoader.getController();
 

@@ -1,4 +1,4 @@
-package entities.audio;
+package util.timer;
 
 import java.io.File;
 
@@ -20,7 +20,7 @@ public class AudioManager{
 		AudioClip soundTrack = new AudioClip(new File(soundTrackPath).toURI().toString());
 		soundTrack.play();
 		
-		if(playing) {
+		if(!playing) {
 			soundTrack.stop();
 		}
 	}

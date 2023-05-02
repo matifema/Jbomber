@@ -1,13 +1,12 @@
-package entities.menu;
+package controllers;
 
 import java.io.IOException;
 
-import entities.audio.AudioManager;
-
-import entities.gameField.Level;
+import application.Level;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
+import util.timer.AudioManager;
 
 public class MenuController {
 	@FXML

@@ -1,12 +1,12 @@
-package entities.gameField;
+package application;
 
 import java.util.HashMap;
 import java.util.List;
 
-import entities.audio.AudioManager;
-
+import controllers.LevelController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import util.timer.AudioManager;
 
 public class Bomb {
 	private AudioManager audio = new AudioManager();
@@ -43,15 +43,21 @@ public class Bomb {
 	}
 
 	private void boom() {
-		// bomb itself
 		audio.playBoom();
-		map.get(List.of(x, y)).setImage(boom);
-		explosion(this.lvl.getNearWalls(x, y));
+		explosion(this.lvl.getNearTiles(x, y));
+		
+		System.out.println("boom! "+destructedWalls+" walls destroyed");
 	}
 
-	private void explosion(List<ImageView> nearWalls) {
-		for (ImageView wall : nearWalls) {
+	private void explosion(List<ImageView> nearTiles) {
+		
+		// rimuove la bomba e aggiunge ai 
+		map.get(List.of(x, y)).setImage(null);
+		nearTiles.add(map.get(List.of(x, y)));
+		
+		for (ImageView wall : nearTiles) {
 			if (wall.getImage() == null) {
+				
 				this.lvl.checkPlayerDamage(wall.getLayoutX()/50, wall.getLayoutY()/50);
 				
 				wall.setImage(boom);
@@ -69,7 +75,7 @@ public class Bomb {
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
-				clear(nearWalls);
+				clear(nearTiles);
 				updateLevelScore();
 			}
 
@@ -82,9 +88,9 @@ public class Bomb {
 
 	}
 
-	private void clear(List<ImageView> nearWalls) {
+	private void clear(List<ImageView> nearTiles) {
 
-		for (ImageView wall : nearWalls) {
+		for (ImageView wall : nearTiles) {
 			if (wall.getImage() != null) {
 				if(wall.getImage().equals(boom)) {
 					wall.setImage(null);					
