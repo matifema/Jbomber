@@ -17,6 +17,7 @@ import javafx.animation.Timeline;
 public class Level {
 	private Scene scene;
 	private List<Enemies> enemies = new ArrayList<>();
+	private Timeline enemyMovementTimeline, enemyBombsTimeline;
 	
 	public Level() throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/Level.fxml"));
@@ -39,31 +40,36 @@ public class Level {
 	}
 
 	private void generateEnemies(LevelController controller) {
-		Enemies enemy1 = new Enemies(controller.getMap(), controller, "bomber");
-		controller.renderEnemies(enemy1);
+		Enemies bomber = new Enemies(controller.getMap(), controller, "bomber");
+		controller.renderEnemies(bomber);
 		
-		enemies.add(enemy1);
+		Enemies walker = new Enemies(controller.getMap(), controller, "walker");
+		controller.renderEnemies(walker);
+		
+		enemies.add(bomber);
+		enemies.add(walker);
 		
         // Create a Timeline to move the enemies randomly
-        Timeline enemyMovementTimeline = new Timeline(new KeyFrame(Duration.millis(500), event -> {
+		this.enemyMovementTimeline = new Timeline(new KeyFrame(Duration.millis(800), event -> {
             for (Enemies e : enemies) {
                 e.moveEnemy();
             }
         }));
-        enemyMovementTimeline.setCycleCount(Timeline.INDEFINITE);
-        enemyMovementTimeline.play();
+		this.enemyMovementTimeline.setCycleCount(Timeline.INDEFINITE);
+		this.enemyMovementTimeline.play();
         
         // Create a Timeline to place bombs
-        Timeline enemyBombsTimeline = new Timeline(new KeyFrame(Duration.millis(3500), event -> {
+		this.enemyBombsTimeline = new Timeline(new KeyFrame(Duration.millis(3500), event -> {
             for (Enemies e : enemies) {
             	if(e.enemyType == "bomber") {
-            		e.placeBomb();            		
+            		e.placeBomb();
+            		e.moveEnemy();
             	}
             }
         }));
         
-        enemyBombsTimeline.setCycleCount(Timeline.INDEFINITE);
-        enemyBombsTimeline.play();		
+		this.enemyBombsTimeline.setCycleCount(Timeline.INDEFINITE);
+		this.enemyBombsTimeline.play();		
 	}
 
 	private void startKeyHandler(Scene scene, LevelController controller) {
@@ -89,6 +95,7 @@ public class Level {
 		});
 	}
 	
+	
 	public Scene getScene() {
 		return scene;
 	}
@@ -112,6 +119,8 @@ public class Level {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.enemyBombsTimeline.stop();
+        this.enemyMovementTimeline.stop();
     }
 	
 }

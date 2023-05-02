@@ -15,7 +15,7 @@ public class Enemies {
     private ImageView enemyBox;
     private Image enemyImg;
     private LevelController levelController;
-    private String bomber = "/resources/enemy1-static.png", walker = "/resources/enemy1-static.png";
+    private String bomber = "/resources/enemy1-static.png", walker = "/resources/enemy2-static.png";
     private HashMap<List<Integer>, ImageView> levelMap;
     public int currentX, currentY;
 	public String enemyType;
@@ -46,7 +46,7 @@ public class Enemies {
         translate.setNode(this.enemyBox);
 
         translate.setByX((-17 + currentX) * 50);
-        translate.setByY((currentY-1) * 50);
+        translate.setByY((currentY - (this.levelController.getTilePane().getChildren().size() - 272)) * 50); // TODO FIXA fatto che quando si renderizzano sono y sempre nuove.
 
         translate.setDuration(Duration.millis(1));
         translate.play();
