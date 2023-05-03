@@ -6,7 +6,6 @@ import java.util.List;
 import controllers.LevelController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import util.timer.AudioManager;
 
 public class Bomb {
 	private AudioManager audio = new AudioManager();
@@ -15,11 +14,15 @@ public class Bomb {
 	public boolean isExploded;
 	private LevelController lvl;
 	private Image wall, boom;
+	private String placedBy;
+	private int expRadius;
 
-	public Bomb(LevelController level,  int placedX, int placedY) {
+	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
-		this.wall = new Image(getClass().getResourceAsStream("/resources/wall.png"));
+		this.wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
 		this.map = level.getMap();
+		this.placedBy = placedBy;
+		this.expRadius = expR;
 		this.lvl = level;
 		this.x = placedX;
 		this.y = placedY;
@@ -44,31 +47,31 @@ public class Bomb {
 
 	private void boom() {
 		audio.playBoom();
-		explosion(this.lvl.getNearTiles(x, y));
-		
-		System.out.println("boom! "+destructedWalls+" walls destroyed");
+		explosion(this.lvl.getNearTiles(x, y, expRadius));
+
+		System.out.println("boom! " + destructedWalls + " walls destroyed");
 	}
 
 	private void explosion(List<ImageView> nearTiles) {
-		
-		// rimuove la bomba e aggiunge ai 
+		// posizione corrente 
 		map.get(List.of(x, y)).setImage(null);
 		nearTiles.add(map.get(List.of(x, y)));
-		
-		for (ImageView wall : nearTiles) {
-			if (wall.getImage() == null) {
+
+		// raggio intorno posizione corrente (piazzamento)
+		for (ImageView tile : nearTiles) {
+			if (tile.getImage() == null) {
+
+				this.lvl.checkPlayerDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);
 				
-				this.lvl.checkPlayerDamage(wall.getLayoutX()/50, wall.getLayoutY()/50);
+				if(this.placedBy.equals("player")) {
+					this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
+				}
 				
-				wall.setImage(boom);
-				continue;
+				tile.setImage(boom);
 			}
-			if (wall.getImage().equals(this.wall)) {
-				wall.setImage(boom);
+			if (tile.getImage().equals(this.wall)) { // TODO FIXA QUESTO
+				tile.setImage(boom);
 				destructedWalls++;
-			}
-			else {
-				wall.setImage(boom); 
 			}
 		}
 
@@ -85,15 +88,14 @@ public class Bomb {
 
 	private void updateLevelScore() {
 		this.lvl.setScore(destructedWalls * 100);
-
 	}
 
 	private void clear(List<ImageView> nearTiles) {
 
 		for (ImageView wall : nearTiles) {
 			if (wall.getImage() != null) {
-				if(wall.getImage().equals(boom)) {
-					wall.setImage(null);					
+				if (wall.getImage().equals(boom)) {
+					wall.setImage(null);
 				}
 			}
 		}

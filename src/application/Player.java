@@ -46,16 +46,16 @@ public class Player {
 	}
 
 	public void dieEvent() {
-	    this.playerBox.setImage(playerDeath1);
+		this.playerBox.setImage(playerDeath1);
 
-	    new java.util.Timer().schedule(new java.util.TimerTask() {
-	        @Override
-	        public void run() {
-	            Platform.runLater(() -> {
-	                die();
-	            });
-	        }
-	    }, 800);
+		new java.util.Timer().schedule(new java.util.TimerTask() {
+			@Override
+			public void run() {
+				Platform.runLater(() -> {
+					die();
+				});
+			}
+		}, 800);
 	}
 
 	private void die() {
@@ -99,18 +99,16 @@ public class Player {
 	}
 
 	public void damageAnimation() {
-		for (int i = 0; i < 5; i++) {
+		try {
 			this.playerBox.setImage(null);
-			new java.util.Timer().schedule(new java.util.TimerTask() {
-				@Override
-				public void run() {
-					spriteBlink();
-				}
-			}, 50);
-		}
+			Thread.sleep(50);
+			this.playerBox.setImage(playerImg);
+			Thread.sleep(50);
+			this.playerBox.setImage(null);
+			Thread.sleep(50);
+			this.playerBox.setImage(playerImg);
+			
+		} catch (InterruptedException e) {e.printStackTrace();}
 	}
-
-	private void spriteBlink() {
-		this.playerBox.setImage(playerImg);
-	}
+	
 }

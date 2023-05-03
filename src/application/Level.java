@@ -16,15 +16,14 @@ import javafx.animation.Timeline;
 
 public class Level {
 	private Scene scene;
-	private List<Enemies> enemies = new ArrayList<>();
+	private List<Enemy> enemies = new ArrayList<>();
 	private Timeline enemyMovementTimeline, enemyBombsTimeline;
-	
+
 	public Level() throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/Level.fxml"));
 		Parent root = fxmlLoader.load();
 		scene = new Scene(root);
 
-		
 		LevelController controller = fxmlLoader.getController();
 		Player player = new Player(controller.getMap(), this);
 
@@ -33,43 +32,47 @@ public class Level {
 		controller.renderWalls();
 		controller.setPlayer(player);
 		controller.renderPlayer(player);
-		
+
 		generateEnemies(controller);
-		
+
 		startKeyHandler(scene, controller);
 	}
 
 	private void generateEnemies(LevelController controller) {
-		Enemies bomber = new Enemies(controller.getMap(), controller, "bomber");
+		Enemy bomber = new Enemy(controller.getMap(), controller, "bomber");
 		controller.renderEnemies(bomber);
-		
-		Enemies walker = new Enemies(controller.getMap(), controller, "walker");
+
+		Enemy walker = new Enemy(controller.getMap(), controller, "walker");
 		controller.renderEnemies(walker);
-		
+
 		enemies.add(bomber);
 		enemies.add(walker);
 		
-        // Create a Timeline to move the enemies randomly
+		controller.setEnemies(enemies);
+
+		// Create a Timeline to move the enemies randomly
 		this.enemyMovementTimeline = new Timeline(new KeyFrame(Duration.millis(800), event -> {
-            for (Enemies e : enemies) {
-                e.moveEnemy();
-            }
-        }));
+			for (Enemy e : enemies) {
+				e.moveEnemy();
+			}
+		}));
 		this.enemyMovementTimeline.setCycleCount(Timeline.INDEFINITE);
 		this.enemyMovementTimeline.play();
-        
-        // Create a Timeline to place bombs
+
+		// Create a Timeline to place bombs
 		this.enemyBombsTimeline = new Timeline(new KeyFrame(Duration.millis(3500), event -> {
-            for (Enemies e : enemies) {
-            	if(e.enemyType == "bomber") {
-            		e.placeBomb();
-            		e.moveEnemy();
-            	}
-            }
-        }));
-        
+			for (Enemy e : enemies) {
+				if (e.enemyType == "bomber") {
+					e.placeBomb();
+					e.moveEnemy();
+				}
+			}
+		}));
+
 		this.enemyBombsTimeline.setCycleCount(Timeline.INDEFINITE);
-		this.enemyBombsTimeline.play();		
+		this.enemyBombsTimeline.play();
+		
+
 	}
 
 	private void startKeyHandler(Scene scene, LevelController controller) {
@@ -94,12 +97,11 @@ public class Level {
 			}
 		});
 	}
-	
-	
+
 	public Scene getScene() {
 		return scene;
 	}
-	
+
 	public void gameOver() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/MainMenu.fxml"));
 		Parent root = null;
@@ -110,17 +112,17 @@ public class Level {
 		}
 		this.scene = new Scene(root);
 	}
-	
-    public void playerDied() {
-        try {
-            GameOver gameOverScreen = new GameOver();
-            Stage currentStage = (Stage) scene.getWindow();
-            currentStage.setScene(gameOverScreen.getScene());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.enemyBombsTimeline.stop();
-        this.enemyMovementTimeline.stop();
-    }
-	
+
+	public void playerDied() {
+		try {
+			GameOver gameOverScreen = new GameOver();
+			Stage currentStage = (Stage) scene.getWindow();
+			currentStage.setScene(gameOverScreen.getScene());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.enemyBombsTimeline.stop();
+		this.enemyMovementTimeline.stop();
+	}
+
 }

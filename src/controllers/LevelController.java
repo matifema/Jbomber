@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,8 +9,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import application.AudioManager;
 import application.Bomb;
-import application.Enemies;
+import application.Enemy;
 import application.Player;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -21,7 +23,6 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
-import util.timer.AudioManager;
 
 public class LevelController {
 	@FXML
@@ -32,7 +33,7 @@ public class LevelController {
 	TilePane tilePane;
 
 	private Player player;
-	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 1;
+	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 2;
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private Bomb placedBomb;
 	private AudioManager audio = new AudioManager();
@@ -40,6 +41,7 @@ public class LevelController {
 			true),
 			border = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/barrier.png", 50, 50, false, true),
 			wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
+	private List<Enemy> enemies;
 
 	public LevelController() {
 		this.audio.playSoundtrack(true);
@@ -107,18 +109,18 @@ public class LevelController {
 			x = rand.nextInt(1, nCols - 1);
 			y = rand.nextInt(3, nRows - 1);
 
-		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y).contains(null)));
+		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y, 1).contains(null)));
 
 		player.currentX = x;
 		player.currentY = y;
 		player.spawnPlayer();
 
 		tilePane.getChildren().add(player.getPlayerNode());
-		
+
 		this.lives.setText("" + livesScore);
 	}
-	
-	public void renderEnemies(Enemies enemies) {
+
+	public void renderEnemies(Enemy enemies) {
 		Random rand = new Random();
 		int x, y;
 
@@ -126,7 +128,7 @@ public class LevelController {
 			x = rand.nextInt(1, nCols - 1);
 			y = rand.nextInt(3, nRows - 1);
 
-		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y).contains(null)));
+		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y, 1).contains(null)));
 
 		enemies.currentX = x;
 		enemies.currentY = y;
@@ -137,11 +139,11 @@ public class LevelController {
 
 	public void placeBomb() {
 		if (this.placedBomb == null || this.placedBomb.isExploded) {
-			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY());
+			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY(), "player", this.explosionPower);
 		}
 	}
 
-	public List<ImageView> getNearTiles(int x, int y) {
+	public List<ImageView> getNearTiles(int x, int y, int radius) {
 		int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 		List<ImageView> nearWalls = new LinkedList<>();
 		Set<List<Integer>> visited = new HashSet<>();
@@ -152,7 +154,7 @@ public class LevelController {
 
 		for (int[] dir : directions) {
 			pos = List.of(x, y);
-			for (int i = 1; i <= explosionPower; i++) {
+			for (int i = 1; i <= radius; i++) {
 				pos = Arrays.asList(pos.get(0) + dir[0], pos.get(1) + dir[1]);
 				if (!visited.add(pos)) {
 					break;
@@ -162,7 +164,7 @@ public class LevelController {
 				if (wall == null) {
 					continue;
 				}
-				
+
 				if (wall.getImage() != null) {
 					if (wall.getImage().equals(border)) {
 						break;
@@ -210,25 +212,45 @@ public class LevelController {
 
 	public void checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {
-			if(Integer.parseInt(this.lives.getText()) == 1) {
+			if (Integer.parseInt(this.lives.getText()) == 1) {
 				this.livesScore--;
 				this.player.dieEvent();
 				this.audio.playSoundtrack(false);
 				this.audio.playGameOver();
-				
-			}
-			else {
+
+			} else {
 				this.audio.playDamageTaken();
 				this.livesScore--;
-				this.lives.setText(""+livesScore);
+				this.lives.setText("" + livesScore);
 				this.player.damageAnimation();
 			}
-			
+
+		}
+	}
+
+	public void checkEnemyDamage(double x, double y) {
+		List<Enemy> temp = new ArrayList<>();
+		
+		for(Enemy e : this.enemies) {
+			if(e.getX() == x && e.getY() == y) {
+				this.audio.playDamageTaken();
+				e.deathAnimation();
+				temp.add(e);
+			}
+		}
+		
+		if(temp.size() > 0) {
+			this.enemies.removeAll(temp);
 		}
 	}
 
 	public TilePane getTilePane() {
 		return this.tilePane;
 	}
-	
+
+	public void setEnemies(List<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+
+
 }

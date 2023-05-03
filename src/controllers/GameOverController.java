@@ -13,14 +13,15 @@ public class GameOverController {
 	Text no;
 	@FXML
 	AnchorPane pane;
-	
-	public GameOverController() {}
-	
+
+	public GameOverController() {
+	}
+
 	public void selectYes() {
 		yes.setStyle("-fx-fill:white;");
 		no.setStyle("-fx-fill:black;");
 	}
-	
+
 	public void selectNo() {
 		yes.setStyle("-fx-fill:black;");
 		no.setStyle("-fx-fill:white;");

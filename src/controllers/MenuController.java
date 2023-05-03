@@ -2,11 +2,11 @@ package controllers;
 
 import java.io.IOException;
 
+import application.AudioManager;
 import application.Level;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
-import util.timer.AudioManager;
 
 public class MenuController {
 	@FXML
@@ -15,7 +15,7 @@ public class MenuController {
 	Text goblinMode;
 	@FXML
 	Text playerProfile;
-	
+
 	private AudioManager audio = new AudioManager();
 	private int selected = 1;
 
@@ -42,12 +42,11 @@ public class MenuController {
 
 	public void updateSelection() {
 		audio.playSelect();
-		
-	    changeTextColor(newGame, selected == 1 ? "red" : "black");
-	    changeTextColor(goblinMode, selected == 2 ? "red" : "black");
-	    changeTextColor(playerProfile, selected == 3 ? "red" : "black");
-	}
 
+		changeTextColor(newGame, selected == 1 ? "red" : "black");
+		changeTextColor(goblinMode, selected == 2 ? "red" : "black");
+		changeTextColor(playerProfile, selected == 3 ? "red" : "black");
+	}
 
 	private void changeTextColor(Text text, String color) {
 		text.setStyle("-fx-fill: " + color + ";");
