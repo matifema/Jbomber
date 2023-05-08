@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src">
+	<classpathentry excluding="javafx/" kind="src" path="src">
 		<attributes>
 			<attribute name="module" value="true"/>
 			<attribute name="add-reads" value="Jbomber=java.compiler"/>
@@ -61,5 +61,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/javafx"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

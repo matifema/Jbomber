@@ -87,7 +87,7 @@ public class Bomb {
 
 	}
 
-	private void spawnPowerUp(ImageView tile) {
+	private PowerUp spawnPowerUp(ImageView tile) {
 		int rand = new Random().nextInt(0, 3);
 		
 		if(rand == 0) {
@@ -108,11 +108,12 @@ public class Bomb {
 					break;
 			}
 			
-			tile.setId("powerup"); // setta id come powerup
+			tile.setId("powerup"); // setta id di powerup
 			System.out.println("spawning.. " + type);
 
-			new PowerUp(this.lvl, (int)tile.getLayoutX()/50, (int)tile.getLayoutY()/50, type);
+			return new PowerUp(this.lvl, (int)tile.getLayoutX()/50, (int)tile.getLayoutY()/50, type);
 		}
+		return null;
 	}
 	
 	private void updateLevelScore() {
@@ -127,8 +128,11 @@ public class Bomb {
 					wall.setImage(null);
 				}
 				if (this.spawnableTiles.contains(wall)) {
-					spawnPowerUp(wall);
-					wall.setId("powerup");
+					PowerUp powerUp = spawnPowerUp(wall);
+					
+					if(powerUp != null) {
+						this.lvl.powerUps.add(powerUp);						
+					}
 				}
 			}
 		}

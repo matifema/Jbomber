@@ -82,10 +82,9 @@ public class Player {
 		if (currentX + deltaX > 17 || currentY + deltaY > 16 || currentX + deltaX < 0 || currentY + deltaY < 0) {
 			return false;
 		}
-
-		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null  // prossima tile "grass"
-				||
-				this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getId().equals("powerup"); // prossima tile "powerup"
+		
+		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null ||
+				this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getId().equals("powerup");
 	}
 
 	public ImageView getPlayerNode() {

@@ -12,7 +12,7 @@ public class PowerUp {
 	private LevelController lvlController;
 	private String type;
 	private Image img;
-	private int x, y;
+	public int x, y;
 	
 	public PowerUp(LevelController controller, int x, int y, String typ) {
 		this.img = new Image(getClass().getResourceAsStream("/resources/powerup-"+typ+".png"));
@@ -21,16 +21,12 @@ public class PowerUp {
 		this.type = typ;
 		this.x = x;
 		this.y = y;
-		
+
 		map.get(List.of(x, y)).setImage(this.img);
 	}
 
-	private void onCollect() {
-		AudioManager audio = new AudioManager();
-		audio.playPickUp();
-		
+	public void onCollect() {
 		map.get(List.of(this.x, this.y)).setImage(null);
-		
 		
 		switch (this.type){
 			case "life":
@@ -40,6 +36,7 @@ public class PowerUp {
 				this.lvlController.addExpPower(1);
 				return;
 			case "golden":
+				
 				return;
 		}
 	}

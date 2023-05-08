@@ -13,6 +13,7 @@ import application.AudioManager;
 import application.Bomb;
 import application.Enemy;
 import application.Player;
+import application.PowerUp;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,7 +34,7 @@ public class LevelController {
 	TilePane tilePane;
 
 	private Player player;
-	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 2;
+	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 5;
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private Bomb placedBomb;
 	private AudioManager audio = new AudioManager();
@@ -42,6 +43,7 @@ public class LevelController {
 			border = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/barrier.png", 50, 50, false, true),
 			wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
 	private List<Enemy> enemies;
+	public List<PowerUp> powerUps = new ArrayList<>();
 
 	public LevelController() {
 		this.audio.playSoundtrack(true);
@@ -65,9 +67,12 @@ public class LevelController {
 		for (int x = 0; x < nCols; x++) {
 			for (int y = 0; y < nRows; y++) {
 				ImageView tile = createTile();
+				tile.setId("");
+				
 				
 				tilePane.getChildren().add(tile);
 				map.put(List.of(x, y), tile);
+				
 			}
 		}
 	}
@@ -163,8 +168,31 @@ public class LevelController {
 	public void movePlayer(int x, int y) {
 		if (this.player.isMoveValid(x, y)) {
 			this.player.movePlayer(x, y);
+			checkEntities();
+		
 		} else {
 			System.out.println("-- collision detected");
+		}
+	}
+
+	private void checkEntities() { // checks for enemies and powerups after moving
+		List<PowerUp> temp = new ArrayList<>();
+		for (PowerUp p : this.powerUps) {
+			if(this.player.currentX == p.x && this.player.currentY == p.y) {
+				p.onCollect();
+				temp.add(p);
+				System.out.println("-- collecting powerup");
+			}
+		}
+		this.powerUps.removeAll(temp);
+		
+		
+		for (Enemy e : this.enemies) {
+			if(this.player.currentX == e.currentX && this.player.currentY == e.currentY) {
+				this.audio.playDamageTaken();
+				this.lives.setText("" + this.livesScore--);
+				this.player.damageAnimation();
+			}
 		}
 	}
 
@@ -178,8 +206,7 @@ public class LevelController {
 
 			} else {
 				this.audio.playDamageTaken();
-				this.livesScore--;
-				this.lives.setText("" + livesScore);
+				this.lives.setText("" + this.livesScore--);
 				this.player.damageAnimation();
 			}
 
