@@ -43,7 +43,7 @@ public class Level {
 		scene.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 			}
-			if (event.getCode() == KeyCode.E) {
+			if (event.getCode() == KeyCode.SPACE) {
 				controller.placeBomb("player", 0, 0);
 			}
 			if (event.getCode() == KeyCode.W) {
