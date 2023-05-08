@@ -1,7 +1,9 @@
 package application;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import controllers.LevelController;
 import javafx.scene.image.Image;
@@ -13,13 +15,13 @@ public class Bomb {
 	private int destructedWalls = 0, x, y;
 	public boolean isExploded;
 	private LevelController lvl;
-	private Image wall, boom;
+	private Image boom;
 	private String placedBy;
 	private int expRadius;
+	private List<ImageView> spawnableTiles = new ArrayList<>();
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
-		this.wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
 		this.map = level.getMap();
 		this.placedBy = placedBy;
 		this.expRadius = expR;
@@ -30,6 +32,7 @@ public class Bomb {
 		// place bomb
 		if (map.get(List.of(x, y)).getImage() == null) {
 			map.get(List.of(x, y)).setImage(new Image(getClass().getResourceAsStream("/resources/bomb.png")));
+			map.get(List.of(x, y)).setId("bomb");
 			startCountDown();
 			isExploded = false;
 		}
@@ -46,21 +49,14 @@ public class Bomb {
 	}
 
 	private void boom() {
-		audio.playBoom();
+		this.audio.playBoom();
 		explosion(this.lvl.getNearTiles(x, y, expRadius));
-
-		System.out.println("boom! " + destructedWalls + " walls destroyed");
 	}
 
 	private void explosion(List<ImageView> nearTiles) {
-		// posizione corrente 
-		map.get(List.of(x, y)).setImage(null);
-		nearTiles.add(map.get(List.of(x, y)));
-
-		// raggio intorno posizione corrente (piazzamento)
 		for (ImageView tile : nearTiles) {
-			if (tile.getImage() == null) {
-
+			if (tile.getImage() == null || (tile.getLayoutX() / 50 == x && tile.getLayoutY() / 50 == y)) {
+				
 				this.lvl.checkPlayerDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);
 				
 				if(this.placedBy.equals("player")) {
@@ -68,10 +64,15 @@ public class Bomb {
 				}
 				
 				tile.setImage(boom);
+				tile.setId(null);
 			}
-			if (tile.getImage().equals(this.wall)) { // TODO FIXA QUESTO
+			else {
 				tile.setImage(boom);
-				destructedWalls++;
+				if(this.placedBy.equals("player")) {
+					this.destructedWalls++;
+					// aggiungo ex wall tile a lista per spawnare powerup
+					this.spawnableTiles.add(tile);
+				}
 			}
 		}
 
@@ -86,8 +87,36 @@ public class Bomb {
 
 	}
 
+	private void spawnPowerUp(ImageView tile) {
+		int rand = new Random().nextInt(0, 3);
+		
+		if(rand == 0) {
+			String type = "";
+			rand = new Random().nextInt(0, 3);
+			
+			switch (rand) {
+				case 0:
+					type += "life";
+					break;
+				case 1:
+					type += "bomb";
+					break;
+				case 2:
+					type += "golden";
+					break;
+				default:
+					break;
+			}
+			
+			tile.setId("powerup"); // setta id come powerup
+			System.out.println("spawning.. " + type);
+
+			new PowerUp(this.lvl, (int)tile.getLayoutX()/50, (int)tile.getLayoutY()/50, type);
+		}
+	}
+	
 	private void updateLevelScore() {
-		this.lvl.setScore(destructedWalls * 100);
+		this.lvl.addScore(destructedWalls * 100);
 	}
 
 	private void clear(List<ImageView> nearTiles) {
@@ -96,6 +125,10 @@ public class Bomb {
 			if (wall.getImage() != null) {
 				if (wall.getImage().equals(boom)) {
 					wall.setImage(null);
+				}
+				if (this.spawnableTiles.contains(wall)) {
+					spawnPowerUp(wall);
+					wall.setId("powerup");
 				}
 			}
 		}

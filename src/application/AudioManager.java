@@ -11,7 +11,8 @@ public class AudioManager{
 				   menuPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/menu.mp3",
 				   selectPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/select.mp3",
 				   gameOverPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/game-over.wav",
-				   damageTakenPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/damage-taken.mp3";
+				   damageTakenPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/damage-taken.mp3",
+				   pickUpPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/pickup.mp3";
 	
 	public AudioManager() {}
 	
@@ -53,6 +54,11 @@ public class AudioManager{
 	public void playSelect() {
 		AudioClip select = new AudioClip(new File(selectPath).toURI().toString());
 		select.play();
+	}
+
+	public void playPickUp() {
+		AudioClip pickUp = new AudioClip(new File(pickUpPath).toURI().toString());
+		pickUp.play();
 	}
 	
 

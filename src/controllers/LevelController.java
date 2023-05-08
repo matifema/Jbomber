@@ -47,6 +47,15 @@ public class LevelController {
 		this.audio.playSoundtrack(true);
 	}
 
+	public ImageView createTile() {
+		ImageView tile = new ImageView();
+
+		tile.setFitHeight(50);
+		tile.setFitWidth(50);
+
+		return tile;
+	}
+	
 	public void populateSpace() {
 		BackgroundImage myBI = new BackgroundImage(grass, BackgroundRepeat.REPEAT, null, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
@@ -56,20 +65,11 @@ public class LevelController {
 		for (int x = 0; x < nCols; x++) {
 			for (int y = 0; y < nRows; y++) {
 				ImageView tile = createTile();
-
+				
 				tilePane.getChildren().add(tile);
 				map.put(List.of(x, y), tile);
 			}
 		}
-	}
-
-	public ImageView createTile() {
-		ImageView tile = new ImageView();
-
-		tile.setFitHeight(50);
-		tile.setFitWidth(50);
-
-		return tile;
 	}
 
 	public void renderBorder() {
@@ -77,6 +77,7 @@ public class LevelController {
 			for (int x = 0; x < nCols; x++) {
 				if (x == 0 || x == nCols - 1 || y == nRows - 1) {
 					map.get(List.of(x, y)).setImage(border);
+					map.get(List.of(x, y)).setId("border");
 				} else {
 					if (x % 2 == 0 && y % 2 != 0) {
 						map.get(List.of(x, y)).setImage(border);
@@ -97,7 +98,7 @@ public class LevelController {
 			} while (map.get(List.of(x, y)).getImage() != null);
 
 			map.get(List.of(x, y)).setImage(wall);
-
+			map.get(List.of(x, y)).setId("wall");
 		}
 	}
 
@@ -109,7 +110,7 @@ public class LevelController {
 			x = rand.nextInt(1, nCols - 1);
 			y = rand.nextInt(3, nRows - 1);
 
-		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y, 1).contains(null)));
+		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y, 1).contains(null))); // spawns in tile con spazio libero
 
 		player.currentX = x;
 		player.currentY = y;
@@ -137,76 +138,33 @@ public class LevelController {
 		tilePane.getChildren().add(enemies.getEnemyNode());
 	}
 
-	public void placeBomb() {
-		if (this.placedBomb == null || this.placedBomb.isExploded) {
-			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY(), "player", this.explosionPower);
-		}
-	}
-
-	public List<ImageView> getNearTiles(int x, int y, int radius) {
-		int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-		List<ImageView> nearWalls = new LinkedList<>();
-		Set<List<Integer>> visited = new HashSet<>();
-		List<Integer> pos = List.of(x, y);
-
-		nearWalls.add(map.get(pos));
-		visited.add(pos);
-
-		for (int[] dir : directions) {
-			pos = List.of(x, y);
-			for (int i = 1; i <= radius; i++) {
-				pos = Arrays.asList(pos.get(0) + dir[0], pos.get(1) + dir[1]);
-				if (!visited.add(pos)) {
-					break;
-				}
-				ImageView wall = map.get(pos);
-
-				if (wall == null) {
-					continue;
-				}
-
-				if (wall.getImage() != null) {
-					if (wall.getImage().equals(border)) {
-						break;
-					}
-				}
-				nearWalls.add(wall);
-			}
-		}
-
-		return nearWalls;
-	}
-
 	public void clearLevel() {
 		for (int y = 0; y < nRows; y++) {
 			for (int x = 0; x < nCols; x++) {
 				if (map.get(List.of(x, y)).getImage() != wall) {
 					map.get(List.of(x, y)).setImage(null);
+					map.get(List.of(x, y)).setId(null);
 				}
 			}
 		}
 		// 306 perche il player è aggiunto per ultimo, ovvero 17*18-1
 		tilePane.getChildren().remove(306);
 	}
-
-	public HashMap<List<Integer>, ImageView> getMap() {
-		return this.map;
-	}
-
-	public void setScore(int points) {
-		this.scorePoints += points;
-		this.score.setText("" + scorePoints);
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
+	
+	public void placeBomb(String placedBy, int x, int y) {
+		if (placedBy.equals("player") && (this.placedBomb == null || this.placedBomb.isExploded)) {
+			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY(), placedBy, this.explosionPower);
+		}
+		if (placedBy.equals("enemy")) {
+			new Bomb(this, x, y, placedBy, 2);
+		}
 	}
 
 	public void movePlayer(int x, int y) {
 		if (this.player.isMoveValid(x, y)) {
 			this.player.movePlayer(x, y);
 		} else {
-			System.out.println("--collision--");
+			System.out.println("-- collision detected");
 		}
 	}
 
@@ -244,6 +202,57 @@ public class LevelController {
 		}
 	}
 
+	public List<ImageView> getNearTiles(int x, int y, int radius) {
+		int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+		List<ImageView> nearWalls = new LinkedList<>();
+		Set<List<Integer>> visited = new HashSet<>();
+		List<Integer> pos = List.of(x, y);
+
+		nearWalls.add(map.get(pos));
+		visited.add(pos);
+
+		for (int[] dir : directions) {
+			pos = List.of(x, y);
+			for (int i = 1; i <= radius; i++) {
+				pos = Arrays.asList(pos.get(0) + dir[0], pos.get(1) + dir[1]);
+				if (!visited.add(pos)) {
+					break;
+				}
+				ImageView wall = map.get(pos);
+
+				if (wall == null) {
+					continue;
+				}
+
+				if (wall.getImage() != null) {
+					if (wall.getImage().equals(border)) {
+						break;
+					}
+				}
+				nearWalls.add(wall);
+			}
+		}
+		return nearWalls;
+	}
+
+	public void addScore(int points) {
+		this.scorePoints += points;
+		this.score.setText("" + scorePoints);
+	}
+
+	public void addLives(int i) {
+		this.livesScore = Integer.parseInt(this.lives.getText()) + i;
+		this.lives.setText("" + this.livesScore);
+	}
+
+	public void addExpPower(int i) {
+		this.explosionPower += i;
+	}
+	
+	public HashMap<List<Integer>, ImageView> getMap() {
+		return this.map;
+	}
+	
 	public TilePane getTilePane() {
 		return this.tilePane;
 	}
@@ -251,6 +260,9 @@ public class LevelController {
 	public void setEnemies(List<Enemy> enemies) {
 		this.enemies = enemies;
 	}
-
+	
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
 }

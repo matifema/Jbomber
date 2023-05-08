@@ -38,6 +38,29 @@ public class Level {
 		startKeyHandler(scene, controller);
 	}
 
+	private void startKeyHandler(Scene scene, LevelController controller) {
+		// Key Handler
+		scene.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+			}
+			if (event.getCode() == KeyCode.E) {
+				controller.placeBomb("player", 0, 0);
+			}
+			if (event.getCode() == KeyCode.W) {
+				controller.movePlayer(0, -1);
+			}
+			if (event.getCode() == KeyCode.A) {
+				controller.movePlayer(-1, 0);
+			}
+			if (event.getCode() == KeyCode.S) {
+				controller.movePlayer(0, 1);
+			}
+			if (event.getCode() == KeyCode.D) {
+				controller.movePlayer(1, 0);
+			}
+		});
+	}
+
 	private void generateEnemies(LevelController controller) {
 		Enemy bomber = new Enemy(controller.getMap(), controller, "bomber");
 		controller.renderEnemies(bomber);
@@ -75,31 +98,16 @@ public class Level {
 
 	}
 
-	private void startKeyHandler(Scene scene, LevelController controller) {
-		// Key Handler
-		scene.setOnKeyPressed(event -> {
-			if (event.getCode() == KeyCode.ENTER) {
-			}
-			if (event.getCode() == KeyCode.E) {
-				controller.placeBomb();
-			}
-			if (event.getCode() == KeyCode.W) {
-				controller.movePlayer(0, -1);
-			}
-			if (event.getCode() == KeyCode.A) {
-				controller.movePlayer(-1, 0);
-			}
-			if (event.getCode() == KeyCode.S) {
-				controller.movePlayer(0, 1);
-			}
-			if (event.getCode() == KeyCode.D) {
-				controller.movePlayer(1, 0);
-			}
-		});
-	}
-
-	public Scene getScene() {
-		return scene;
+	public void playerDied() {
+		try {
+			GameOver gameOverScreen = new GameOver();
+			Stage currentStage = (Stage) scene.getWindow();
+			currentStage.setScene(gameOverScreen.getScene());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.enemyBombsTimeline.stop();
+		this.enemyMovementTimeline.stop();
 	}
 
 	public void gameOver() {
@@ -113,16 +121,10 @@ public class Level {
 		this.scene = new Scene(root);
 	}
 
-	public void playerDied() {
-		try {
-			GameOver gameOverScreen = new GameOver();
-			Stage currentStage = (Stage) scene.getWindow();
-			currentStage.setScene(gameOverScreen.getScene());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		this.enemyBombsTimeline.stop();
-		this.enemyMovementTimeline.stop();
+	public Scene getScene() {
+		return scene;
 	}
+
+
 
 }

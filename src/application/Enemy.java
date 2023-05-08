@@ -56,15 +56,13 @@ public class Enemy {
 		int[] randomDirection = directions[new Random().nextInt(directions.length)];
 		int randomX = randomDirection[0], randomY = randomDirection[1];
 
-		if (isMoveValid(randomX, randomY)) {
+		if (isMoveValid(randomX, randomY)) {			
 			move(randomX, randomY);
-			System.out.println("--- enemy move");			
 		}
 	}
 
 	public void placeBomb() {
-		System.out.println("--- enemy place bomb");
-		new Bomb(this.levelController, this.currentX, this.currentY, "enemy", 2);
+		this.levelController.placeBomb("enemy", this.currentX, this.currentY);
 	}
 
 	public void move(int x, int y) {

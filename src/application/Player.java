@@ -83,7 +83,9 @@ public class Player {
 			return false;
 		}
 
-		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null;
+		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null  // prossima tile "grass"
+				||
+				this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getId().equals("powerup"); // prossima tile "powerup"
 	}
 
 	public ImageView getPlayerNode() {
