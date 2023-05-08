@@ -1,7 +1,7 @@
 # Jbomber (SuperBomberMan bad clone)
 
 ## Table of Contents
-- [TODO] (#TODO)
+- [TODO](#TODO)
 - [Features](#features)
 - [How to Play](#how-to-play)
 - [Controls](#controls)
