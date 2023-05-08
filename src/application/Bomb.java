@@ -15,7 +15,8 @@ public class Bomb {
 	private int destructedWalls = 0, x, y;
 	public boolean isExploded;
 	private LevelController lvl;
-	private Image boom;
+	private Image bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png"));
+	public Image boom;
 	private String placedBy;
 	private int expRadius;
 	private List<ImageView> spawnableTiles = new ArrayList<>();
@@ -31,7 +32,7 @@ public class Bomb {
 
 		// place bomb
 		if (map.get(List.of(x, y)).getImage() == null) {
-			map.get(List.of(x, y)).setImage(new Image(getClass().getResourceAsStream("/resources/bomb.png")));
+			map.get(List.of(x, y)).setImage(this.bomb);
 			map.get(List.of(x, y)).setId("bomb");
 			startCountDown();
 			isExploded = false;
@@ -62,12 +63,16 @@ public class Bomb {
 				if(this.placedBy.equals("player")) {
 					this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
 				}
-				
+
 				tile.setImage(boom);
-				tile.setId(null);
+				tile.setId("");
 			}
 			else {
-				tile.setImage(boom);
+				if (!tile.getImage().equals(this.bomb)) {
+					tile.setImage(boom);
+				}
+				
+
 				if(this.placedBy.equals("player")) {
 					this.destructedWalls++;
 					// aggiungo ex wall tile a lista per spawnare powerup

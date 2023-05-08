@@ -148,7 +148,7 @@ public class LevelController {
 			for (int x = 0; x < nCols; x++) {
 				if (map.get(List.of(x, y)).getImage() != wall) {
 					map.get(List.of(x, y)).setImage(null);
-					map.get(List.of(x, y)).setId(null);
+					map.get(List.of(x, y)).setId("");
 				}
 			}
 		}

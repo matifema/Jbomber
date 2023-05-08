@@ -76,6 +76,7 @@ public class Enemy {
 		translate.setByY(y * 50);
 		translate.setDuration(Duration.millis(1));
 		translate.play();
+
 	}
 
 	public boolean isMoveValid(int deltaX, int deltaY) {
