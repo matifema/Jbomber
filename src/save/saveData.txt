@@ -1,6 +1,6 @@
-marco
-1
+Anna
+6
+6
+9
 0
-1
-0
-avatar1.png
+avatar3.png

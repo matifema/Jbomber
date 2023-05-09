@@ -36,7 +36,7 @@ public class PowerUp {
 				this.lvlController.addExpPower(1);
 				return;
 			case "golden":
-				
+				this.lvlController.addScore(1000);
 				return;
 		}
 	}

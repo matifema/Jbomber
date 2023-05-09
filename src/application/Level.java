@@ -41,8 +41,6 @@ public class Level {
 	private void startKeyHandler(Scene scene, LevelController controller) {
 		// Key Handler
 		scene.setOnKeyPressed(event -> {
-			if (event.getCode() == KeyCode.ENTER) {
-			}
 			if (event.getCode() == KeyCode.SPACE) {
 				controller.placeBomb("player", 0, 0);
 			}
@@ -77,6 +75,7 @@ public class Level {
 		this.enemyMovementTimeline = new Timeline(new KeyFrame(Duration.millis(800), event -> {
 			for (Enemy e : enemies) {
 				e.moveEnemy();
+				controller.checkPlayerDamage(e.currentX, e.currentY);
 			}
 		}));
 		this.enemyMovementTimeline.setCycleCount(Timeline.INDEFINITE);
@@ -88,6 +87,7 @@ public class Level {
 				if (e.enemyType == "bomber") {
 					e.placeBomb();
 					e.moveEnemy();
+					controller.checkPlayerDamage(e.currentX, e.currentY);
 				}
 			}
 		}));
@@ -114,6 +114,14 @@ public class Level {
 		return scene;
 	}
 
+	public void levelComplete() { //TODO COMPLETE THIS
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/LevelComplete.fxml"));
+			Parent root = fxmlLoader.load();
+			Stage currentStage = (Stage) scene.getWindow();
 
+			currentStage.setScene(new Scene(root));
+		} catch (IOException e) {e.printStackTrace();}
+	}
 
 }

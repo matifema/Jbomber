@@ -11,10 +11,7 @@
 
 
 ## TODO:
-- Implement continue screen
-- NG+
-- Player stats (from menu)
-- Implement golden powerup
+- NG+ (colors)
 - Enemies melee damage when walking to player
 - Bomb visual glitches (<- probably due to non two-way bind map)
 - Small audio effects glitches

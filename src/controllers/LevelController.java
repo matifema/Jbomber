@@ -180,6 +180,7 @@ public class LevelController {
 
 	private void checkEntities() { // checks for enemies and powerups after moving
 		List<PowerUp> temp = new ArrayList<>();
+		
 		for (PowerUp p : this.powerUps) {
 			if(this.player.currentX == p.x && this.player.currentY == p.y) {
 				p.onCollect();
@@ -191,34 +192,25 @@ public class LevelController {
 		
 		
 		for (Enemy e : this.enemies) {
-			if(this.player.currentX == e.currentX && this.player.currentY == e.currentY) {
-				this.audio.playDamageTaken();
-				this.lives.setText("" + this.livesScore--);
-				this.player.damageAnimation();
-			}
-		}
-
-		if (this.enemies.size() == 0){
-			ReadFromFile save = new ReadFromFile();
-			save.wonGame();
+			checkPlayerDamage(e.currentX, e.currentY);
 		}
 	}
 
 	public void checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {
-			if (Integer.parseInt(this.lives.getText()) < 1) {
-				this.livesScore--;
+			if (Integer.parseInt(this.lives.getText()) <= 1) {
 				this.player.dieEvent();
-				this.audio.playSoundtrack(false);
 				this.audio.playGameOver();
+				this.audio.playSoundtrack(false);
+				this.lives.setText("" + this.livesScore--);
 				
 				ReadFromFile save = new ReadFromFile(); //record in stats
 				save.lostGame();
 
 			} else {
 				this.audio.playDamageTaken();
-				this.lives.setText("" + this.livesScore--);
 				this.player.damageAnimation();
+				this.lives.setText("" + this.livesScore--);
 			}
 
 		}
@@ -226,7 +218,7 @@ public class LevelController {
 
 	public void checkEnemyDamage(double x, double y) {
 		List<Enemy> temp = new ArrayList<>();
-		
+
 		for(Enemy e : this.enemies) {
 			if(e.getX() == x && e.getY() == y) {
 				this.audio.playDamageTaken();
@@ -237,6 +229,13 @@ public class LevelController {
 		
 		if(temp.size() > 0) {
 			this.enemies.removeAll(temp);
+		}
+
+		//check per vittoria
+		if (this.enemies.size() == 0){
+			ReadFromFile save = new ReadFromFile();
+			save.wonGame();
+			this.player.levelComplete();
 		}
 	}
 

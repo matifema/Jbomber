@@ -17,12 +17,12 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#6a77d7" height="196.0" layoutX="-7.0" layoutY="-4.0" stroke="BLACK" strokeType="INSIDE" width="861.0" />
       <Text layoutX="41.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ニセ90年代ジャパニーズ・カンパニー">
          <font>
-            <Font size="30.0" />
+            <Font size="25.0" />
          </font>
       </Text>
-      <Text layoutX="41.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="JBOMBERMAN">
+      <Text layoutX="39.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="JBOMBERMAN">
          <font>
-            <Font name="Computer Pixel-7" size="96.0" />
+            <Font name="Computer Pixel-7" size="120.0" />
          </font>
       </Text>
       <Text layoutX="39.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="License doesnt exist  @Tokyo 1993">

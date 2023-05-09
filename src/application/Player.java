@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
@@ -110,6 +111,14 @@ public class Player {
 			this.playerBox.setImage(playerImg);
 			
 		} catch (InterruptedException e) {e.printStackTrace();}
+	}
+
+    public Scene getScene() {
+        return null;
+    }
+
+	public void levelComplete() {
+		level.levelComplete();
 	}
 	
 }
