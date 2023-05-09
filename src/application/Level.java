@@ -110,17 +110,6 @@ public class Level {
 		this.enemyMovementTimeline.stop();
 	}
 
-	public void gameOver() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/MainMenu.fxml"));
-		Parent root = null;
-		try {
-			root = fxmlLoader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		this.scene = new Scene(root);
-	}
-
 	public Scene getScene() {
 		return scene;
 	}

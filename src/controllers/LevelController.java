@@ -24,6 +24,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
+import save.ReadFromFile;
 
 public class LevelController {
 	@FXML
@@ -33,17 +34,19 @@ public class LevelController {
 	@FXML
 	TilePane tilePane;
 
+	private final int nCols = 17, nRows = 16, nWalls = 50;
+	private final Image	grass = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/grass.png", 50, 50, false, true),
+						border = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/barrier.png", 50, 50, false, true),
+						wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
+	
+	private Integer scorePoints = 0, explosionPower = 1, livesScore = 5;
 	private Player player;
-	private int nCols = 17, nRows = 16, scorePoints = 0, nWalls = 50, explosionPower = 1, livesScore = 5;
-	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private Bomb placedBomb;
 	private AudioManager audio = new AudioManager();
-	private Image grass = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/grass.png", 50, 50, false,
-			true),
-			border = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/barrier.png", 50, 50, false, true),
-			wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
+	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private List<Enemy> enemies;
 	public List<PowerUp> powerUps = new ArrayList<>();
+
 
 	public LevelController() {
 		this.audio.playSoundtrack(true);
@@ -194,15 +197,23 @@ public class LevelController {
 				this.player.damageAnimation();
 			}
 		}
+
+		if (this.enemies.size() == 0){
+			ReadFromFile save = new ReadFromFile();
+			save.wonGame();
+		}
 	}
 
 	public void checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {
-			if (Integer.parseInt(this.lives.getText()) == 1) {
+			if (Integer.parseInt(this.lives.getText()) < 1) {
 				this.livesScore--;
 				this.player.dieEvent();
 				this.audio.playSoundtrack(false);
 				this.audio.playGameOver();
+				
+				ReadFromFile save = new ReadFromFile(); //record in stats
+				save.lostGame();
 
 			} else {
 				this.audio.playDamageTaken();

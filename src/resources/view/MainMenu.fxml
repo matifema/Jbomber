@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="800" maxWidth="800" minHeight="800" minWidth="800" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="800" minWidth="800" prefHeight="900.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MenuController">
    <children>
-      <ImageView fitHeight="635.0" fitWidth="508.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="603.0" fitWidth="861.0" layoutX="-5.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" scaleY="0.7">
          <image>
-            <Image url="@../../resources/jbomberman.png" />
+            <Image url="@../../../../../Downloads/bomberman-img.jpg" />
          </image>
       </ImageView>
-      <Text fx:id="newGame" fill="RED" layoutX="347.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- New Game">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#6a77d7" height="196.0" layoutX="-7.0" layoutY="-4.0" stroke="BLACK" strokeType="INSIDE" width="861.0" />
+      <Text layoutX="41.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ニセ90年代ジャパニーズ・カンパニー">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Text>
+      <Text layoutX="41.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="JBOMBERMAN">
+         <font>
+            <Font name="Computer Pixel-7" size="96.0" />
+         </font>
+      </Text>
+      <Text layoutX="39.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="License doesnt exist  @Tokyo 1993">
+         <font>
+            <Font name="Computer Pixel-7" size="23.0" />
+         </font>
+      </Text>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#6a77d7" height="313.0" layoutX="-3.0" layoutY="588.0" stroke="BLACK" strokeType="INSIDE" width="861.0" />
+      <Text fx:id="quit" layoutX="342.0" layoutY="825.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Quit">
          <font>
             <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
-      <Text fx:id="goblinMode" layoutX="347.0" layoutY="419.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Goblin Mode">
+      <Text fx:id="playerProfile" layoutX="211.0" layoutY="741.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Player Profile">
          <font>
             <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
-      <Text fx:id="playerProfile" layoutX="347.0" layoutY="486.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- Player Profile">
+      <Text fx:id="newGame" fill="WHITE" layoutX="258.0" layoutY="664.0" strokeType="OUTSIDE" strokeWidth="0.0" style="" text="- New Game">
          <font>
             <Font name="Computer Pixel-7" size="77.0" />
          </font>
       </Text>
-      <Label alignment="CENTER" blendMode="DARKEN" contentDisplay="CENTER" layoutX="43.0" layoutY="614.0" prefHeight="179.0" prefWidth="714.0" text="JBomberman">
-         <font>
-            <Font name="Computer Pixel-7" size="170.0" />
-         </font>
-      </Label>
    </children>
 </AnchorPane>

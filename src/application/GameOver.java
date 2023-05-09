@@ -18,7 +18,6 @@ public class GameOver {
 
 		this.scene = new Scene(root);
 
-		controller.setBackGround();
 		startKeyHandler(scene, controller);
 	}
 
@@ -29,6 +28,10 @@ public class GameOver {
 			}
 			if (event.getCode() == KeyCode.RIGHT) {
 				controller.selectNo();
+			}
+			if (event.getCode() == KeyCode.ENTER){
+				try {
+					controller.selected();	} catch (IOException e) {e.printStackTrace();}
 			}
 		});
 	}

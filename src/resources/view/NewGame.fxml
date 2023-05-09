@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.NewGameController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="933.0" layoutX="-14.0" layoutY="-16.0" stroke="BLACK" strokeType="INSIDE" width="888.0" />
+      <TextField fx:id="nameField" alignment="CENTER" layoutX="248.0" layoutY="333.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="75.0" prefWidth="370.0" promptText="...">
+         <font>
+            <Font name="Computer Pixel-7" size="29.0" />
+         </font>
+      </TextField>
+      <Text fill="WHITE" layoutX="62.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Game" wrappingWidth="725.0499877929688">
+         <font>
+            <Font name="Computer Pixel-7" size="96.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="284.0" layoutY="504.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select Avatar">
+         <font>
+            <Font name="Computer Pixel-7" size="63.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="261.0" layoutY="295.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter Nickname">
+         <font>
+            <Font name="Computer Pixel-7" size="63.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="188.0" layoutY="764.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Press E to Start" textAlignment="CENTER">
+         <font>
+            <Font name="Computer Pixel-7" size="83.0" />
+         </font>
+      </Text>
+      <Text fill="WHITE" layoutX="24.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;- ESC">
+         <font>
+            <Font name="Computer Pixel-7" size="39.0" />
+         </font>
+      </Text>
+      <RadioButton fx:id="btn1" contentDisplay="CENTER" ellipsisString="     " layoutX="248.0" layoutY="535.0" mnemonicParsing="false" prefHeight="122.0" prefWidth="110.0">
+         <graphic>
+            <ImageView fitHeight="68.0" fitWidth="87.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../avatar1.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </RadioButton>
+      <RadioButton fx:id="btn2" contentDisplay="CENTER" ellipsisString="     " layoutX="372.0" layoutY="535.0" mnemonicParsing="false" prefHeight="122.0" prefWidth="116.0">
+         <graphic>
+            <ImageView fitHeight="68.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../avatar3.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </RadioButton>
+      <RadioButton fx:id="btn3" contentDisplay="CENTER" ellipsisString="     " layoutX="502.0" layoutY="535.0" mnemonicParsing="false" prefHeight="122.0" prefWidth="116.0">
+         <graphic>
+            <ImageView fitHeight="68.0" fitWidth="87.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../avatar2.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </RadioButton>
+   </children>
+</AnchorPane>

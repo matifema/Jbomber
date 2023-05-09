@@ -1,10 +1,13 @@
 package controllers;
 
+import java.io.IOException;
+
+import application.Level;
+import application.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class GameOverController {
 	@FXML
@@ -14,21 +17,35 @@ public class GameOverController {
 	@FXML
 	AnchorPane pane;
 
+	private int selected = 1;
+
 	public GameOverController() {
 	}
 
 	public void selectYes() {
 		yes.setStyle("-fx-fill:white;");
 		no.setStyle("-fx-fill:black;");
+
+		selected = 1;
 	}
 
 	public void selectNo() {
 		yes.setStyle("-fx-fill:black;");
 		no.setStyle("-fx-fill:white;");
+		
+		selected = 0;
 	}
 
-	public void setBackGround() {
-		this.pane.setBackground(Background.fill(Color.BLACK));
-		selectYes();
+	public void selected() throws IOException {
+		Stage currentStage = (Stage) pane.getScene().getWindow();
+		
+		if (selected  == 1){
+			Level newLvl = new Level();
+			currentStage.setScene(newLvl.getScene());
+		}
+		else{
+			MainMenu menu = new MainMenu();
+			currentStage.setScene(menu.getScene());
+		}
 	}
 }
