@@ -243,8 +243,10 @@ public class LevelController {
 		if (this.enemies.size() == 0){
 			this.audio.playSoundtrack(false);
 			this.audio.playGameStart();
-			ReadFromFile save = new ReadFromFile();
-			save.wonGame();
+			
+			ReadFromFile saveFile = new ReadFromFile();
+			saveFile.newLevel();
+			saveFile.wonGame();
 
 			Platform.runLater(() ->{ // per thread del timer
 				try {

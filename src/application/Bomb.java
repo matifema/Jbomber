@@ -82,6 +82,9 @@ public class Bomb {
 					this.spawnableTiles.add(tile);
 				}
 			}
+			if(this.gameEnded){
+				break;
+			}
 		}
 		
 		if (!gameEnded){

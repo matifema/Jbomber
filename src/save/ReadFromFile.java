@@ -84,4 +84,14 @@ public class ReadFromFile {
         } catch (IOException e) { e.printStackTrace(); }
 
     }
+
+    public void newLevel(){
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(Paths.get(filePath));
+            lines.set(4, (Integer.parseInt(lines.get(4))+1)+""); // level
+    
+            setData(lines);        
+        } catch (IOException e) { e.printStackTrace(); }
+    }
 }
