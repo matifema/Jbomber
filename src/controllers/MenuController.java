@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import save.ReadFromFile;
 
 public class MenuController {
@@ -56,40 +57,43 @@ public class MenuController {
 		text.setStyle("-fx-fill: " + color + ";");
 	}
 
-	public Scene select() throws IOException {
+	public void select(Stage mainStage) throws IOException {
 		switch (selected) {
 			case 1:
 				if (checkForPlayerData()){
-					Level level = new Level();
-					return level.getScene();
+					new Level(mainStage);
 				}
 				else{
-					return getAndSaveData();
+					setPlayerInfo(mainStage);
 				}
-			
+				break;
+
 			case 2:
-				Stats stats = new Stats();
-				return stats.getScene();
-			
+				new Stats(mainStage);
+				
+				break;
+
 			case 3: // quit
 				System.exit(0);
-				return null;
-			
+				break;
+
 			default:
-				return null;
+				break;
 		}
 	}
 
 
-	private Scene getAndSaveData() throws IOException {
+	private void setPlayerInfo(Stage mainStage) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/NewGame.fxml"));
 		Parent root = fxmlLoader.load();
 		NewGameController controller = fxmlLoader.getController();
 		Scene scene = new Scene(root);
 		
+		mainStage.setScene(scene);
+
+
+		controller.setStage(mainStage);
 		controller.startKeyHandler(scene);
-		
-		return scene;
 	}
 
 	public boolean checkForPlayerData(){

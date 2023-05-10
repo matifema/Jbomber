@@ -17,6 +17,7 @@ public class GameOverController {
 	@FXML
 	AnchorPane pane;
 
+	private Stage mainStage;
 	private int selected = 1;
 
 	public GameOverController() {
@@ -37,15 +38,15 @@ public class GameOverController {
 	}
 
 	public void selected() throws IOException {
-		Stage currentStage = (Stage) pane.getScene().getWindow();
-		
 		if (selected  == 1){
-			Level newLvl = new Level();
-			currentStage.setScene(newLvl.getScene());
+			new Level(this.mainStage);
 		}
 		else{
-			MainMenu menu = new MainMenu();
-			currentStage.setScene(menu.getScene());
+			new MainMenu(this.mainStage);
 		}
+	}
+
+	public void setStage(Stage stage) {
+		this.mainStage = stage;
 	}
 }

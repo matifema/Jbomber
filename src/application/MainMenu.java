@@ -13,14 +13,15 @@ import controllers.MenuController;
 public class MainMenu {
 	private Scene scene;
 
-	public MainMenu() throws IOException {
+	public MainMenu(Stage mainStage) throws IOException {
 		// loading MENU fxml and css
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/MainMenu.fxml"));
 		Parent root = fxmlLoader.load();
 		MenuController controller = fxmlLoader.getController();
 
 		// set scene
-		this.scene = new Scene(root);
+		scene = new Scene(root);
+		mainStage.setScene(scene);
 
 		// key handling
 		scene.setOnKeyPressed(event -> {
@@ -32,13 +33,9 @@ public class MainMenu {
 			}
 			if (event.getCode() == KeyCode.ENTER) {
 				try {
-					// prende stage da scene DOPO essere stato show() in MAIN
-					Stage currentStage = (Stage) this.scene.getWindow();
-
-					currentStage.setScene(controller.select());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+					controller.select(mainStage); //selezione tra stats e level
+				
+				} catch (IOException e) { e.printStackTrace();}
 			}
 		});
 

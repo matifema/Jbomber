@@ -7,16 +7,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 
 public class GameOver {
 	private Scene scene;
-
-	public GameOver() throws IOException {
+	private Stage mainStage;
+	
+	public GameOver(Stage stage) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/GameOver.fxml"));
 		Parent root = fxmlLoader.load();
 		GameOverController controller = fxmlLoader.getController();
+		controller.setStage(stage);
 
 		this.scene = new Scene(root);
+		mainStage.setScene(scene);
 
 		startKeyHandler(scene, controller);
 	}

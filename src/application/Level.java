@@ -18,21 +18,28 @@ public class Level {
 	private Scene scene;
 	private List<Enemy> enemies = new ArrayList<>();
 	private Timeline enemyMovementTimeline, enemyBombsTimeline;
+	private Stage mainStage;
 
-	public Level() throws IOException {
+	public Level(Stage stage) throws IOException {
+		this.mainStage = stage;
+
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/Level.fxml"));
 		Parent root = fxmlLoader.load();
-		scene = new Scene(root);
-
 		LevelController controller = fxmlLoader.getController();
-		Player player = new Player(controller.getMap(), this);
+		
+		scene = new Scene(root);
+		mainStage.setScene(scene);
 
+		
+		Player player = new Player(controller.getMap(), this);
+		
 		controller.populateSpace();
 		controller.renderBorder();
 		controller.renderWalls();
+		
 		controller.setPlayer(player);
 		controller.renderPlayer(player);
-
+		
 		generateEnemies(controller);
 
 		startKeyHandler(scene, controller);
@@ -100,28 +107,28 @@ public class Level {
 
 	public void playerDied() {
 		try {
-			GameOver gameOverScreen = new GameOver();
-			Stage currentStage = (Stage) scene.getWindow();
-			currentStage.setScene(gameOverScreen.getScene());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			new GameOver(this.mainStage);
+		
+		} catch (IOException e) { e.printStackTrace();}
+		
 		this.enemyBombsTimeline.stop();
 		this.enemyMovementTimeline.stop();
-	}
-
-	public Scene getScene() {
-		return scene;
 	}
 
 	public void levelComplete() { //TODO COMPLETE THIS
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/LevelComplete.fxml"));
 			Parent root = fxmlLoader.load();
-			Stage currentStage = (Stage) scene.getWindow();
+			Scene levelComplete = new Scene(root);
 
-			currentStage.setScene(new Scene(root));
+			this.mainStage.setScene(levelComplete);
 		} catch (IOException e) {e.printStackTrace();}
+		
 	}
+
+	public Scene getScene() {
+		return scene;
+	}
+
 
 }

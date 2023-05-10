@@ -25,7 +25,8 @@ public class NewGameController {
 
     private String avatar = "";
     private ToggleGroup toggleGroup = new ToggleGroup();
-    
+    private Stage mainStage;
+
     public NewGameController(){
     }
 
@@ -53,9 +54,8 @@ public class NewGameController {
                 write.setData(List.of(nameField.getText(), "0", "0", "0", "0", this.avatar));
             
                 try {
-                    Stage currentStage = (Stage) scene.getWindow();
-                    Level lvl = new Level();
-                    currentStage.setScene(lvl.getScene());
+                    new Level(this.mainStage);
+
                 } catch (IOException e) {e.printStackTrace();}
             }
             if (event.getCode() == KeyCode.ESCAPE){
@@ -64,6 +64,10 @@ public class NewGameController {
 		});
     
         
+    }
+
+    public void setStage(Stage stage) {
+        this.mainStage = stage;
     }
 
 

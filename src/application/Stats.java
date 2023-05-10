@@ -12,12 +12,13 @@ import javafx.stage.Stage;
 public class Stats {
     private Scene scene;
 
-	public Stats() throws IOException {
+	public Stats(Stage mainStage) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/Stats.fxml"));
 		Parent root = fxmlLoader.load();
 		StatsController controller = fxmlLoader.getController();
 
 		this.scene = new Scene(root);
+		mainStage.setScene(scene);
 
         controller.loadData();
 
@@ -25,10 +26,9 @@ public class Stats {
 		scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE){
                 try {
-                    Stage currentStage = (Stage) scene.getWindow();
-                    MainMenu mn = new MainMenu();
-                    currentStage.setScene(mn.getScene());
-                } catch (IOException e) {e.printStackTrace();}
+                    new MainMenu(mainStage);
+                
+				} catch (IOException e) {e.printStackTrace();}
                 
             }
 		});
