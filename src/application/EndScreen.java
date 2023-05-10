@@ -2,36 +2,41 @@ package application;
 
 import java.io.IOException;
 
-import controllers.GameOverController;
+import controllers.EndScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
-public class GameOver {
+public class EndScreen {
 	private Scene scene;
-	private Stage mainStage;
 	
-	public GameOver(Stage stage) throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/GameOver.fxml"));
+	public EndScreen(Stage stage, String title) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/EndScreen.fxml"));
 		Parent root = fxmlLoader.load();
-		GameOverController controller = fxmlLoader.getController();
+		EndScreenController controller = fxmlLoader.getController();
+		
 		controller.setStage(stage);
+		controller.setText(title);
 
 		this.scene = new Scene(root);
-		mainStage.setScene(scene);
+		stage.setScene(scene);
 
 		startKeyHandler(scene, controller);
 	}
 
-	private void startKeyHandler(Scene scene, GameOverController controller) {
+	private void startKeyHandler(Scene scene, EndScreenController controller) {
+		AudioManager audio = new AudioManager();
+
 		scene.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.LEFT) {
 				controller.selectYes();
+				audio.playSelect();
 			}
 			if (event.getCode() == KeyCode.RIGHT) {
 				controller.selectNo();
+				audio.playSelect();
 			}
 			if (event.getCode() == KeyCode.ENTER){
 				try {

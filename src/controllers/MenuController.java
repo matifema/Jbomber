@@ -60,7 +60,7 @@ public class MenuController {
 	public void select(Stage mainStage) throws IOException {
 		switch (selected) {
 			case 1:
-				if (checkForPlayerData()){
+				if (!isDataSaved()){
 					new Level(mainStage);
 				}
 				else{
@@ -69,8 +69,12 @@ public class MenuController {
 				break;
 
 			case 2:
-				new Stats(mainStage);
-				
+				if (!isDataSaved()){
+					new Stats(mainStage);
+				}
+				else{
+					setPlayerInfo(mainStage);
+				}
 				break;
 
 			case 3: // quit
@@ -88,17 +92,17 @@ public class MenuController {
 		Parent root = fxmlLoader.load();
 		NewGameController controller = fxmlLoader.getController();
 		Scene scene = new Scene(root);
+		controller.setStage(mainStage);
+		controller.startKeyHandler(scene);
 		
 		mainStage.setScene(scene);
 
 
-		controller.setStage(mainStage);
-		controller.startKeyHandler(scene);
 	}
 
-	public boolean checkForPlayerData(){
+	public boolean isDataSaved(){
 		ReadFromFile read = new ReadFromFile();
 
-		return (read.getData().get(0) != null);
+		return (read.getData().get(2) == null);
 	}
 }

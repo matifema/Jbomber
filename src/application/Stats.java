@@ -23,9 +23,11 @@ public class Stats {
         controller.loadData();
 
 		// key handling
+		AudioManager audio = new AudioManager();
 		scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE){
-                try {
+                audio.playSelect();
+				try {
                     new MainMenu(mainStage);
                 
 				} catch (IOException e) {e.printStackTrace();}

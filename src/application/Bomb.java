@@ -19,6 +19,7 @@ public class Bomb {
 	public Image boom;
 	private String placedBy;
 	private int expRadius;
+	private boolean gameEnded = false;
 	private List<ImageView> spawnableTiles = new ArrayList<>();
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
@@ -43,8 +44,8 @@ public class Bomb {
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
 			public void run() {
-				boom();
 				isExploded = true;
+				boom();
 			}
 		}, 3000);
 	}
@@ -58,10 +59,12 @@ public class Bomb {
 		for (ImageView tile : nearTiles) {
 			if (tile.getImage() == null || (tile.getLayoutX() / 50 == x && tile.getLayoutY() / 50 == y)) {
 				
-				this.lvl.checkPlayerDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);
+				this.gameEnded =
+					this.lvl.checkPlayerDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);
 				
 				if(this.placedBy.equals("player")) {
-					this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
+					this.gameEnded = 
+						this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
 				}
 
 				tile.setImage(boom);
@@ -80,15 +83,18 @@ public class Bomb {
 				}
 			}
 		}
+		
+		if (!gameEnded){
+			System.out.println("game not ended");
+			new java.util.Timer().schedule(new java.util.TimerTask() {
+				@Override
+				public void run() {
+					clear(nearTiles);
+					updateLevelScore();
+				}
 
-		new java.util.Timer().schedule(new java.util.TimerTask() {
-			@Override
-			public void run() {
-				clear(nearTiles);
-				updateLevelScore();
-			}
-
-		}, 200);
+			}, 200);
+		}
 
 	}
 

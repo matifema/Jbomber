@@ -9,7 +9,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class GameOverController {
+public class EndScreenController {
+	@FXML
+	Text title;
 	@FXML
 	Text yes;
 	@FXML
@@ -20,7 +22,7 @@ public class GameOverController {
 	private Stage mainStage;
 	private int selected = 1;
 
-	public GameOverController() {
+	public EndScreenController() {
 	}
 
 	public void selectYes() {
@@ -48,5 +50,9 @@ public class GameOverController {
 
 	public void setStage(Stage stage) {
 		this.mainStage = stage;
+	}
+
+	public void setText(String title){
+		this.title.setText(title);
 	}
 }

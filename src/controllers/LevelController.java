@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.Arrays;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,9 +12,11 @@ import java.util.Set;
 
 import application.AudioManager;
 import application.Bomb;
+import application.EndScreen;
 import application.Enemy;
 import application.Player;
 import application.PowerUp;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +27,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import save.ReadFromFile;
 
 public class LevelController {
@@ -46,6 +50,7 @@ public class LevelController {
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private List<Enemy> enemies;
 	public List<PowerUp> powerUps = new ArrayList<>();
+	private Stage mainStage;
 
 
 	public LevelController() {
@@ -196,7 +201,7 @@ public class LevelController {
 		}
 	}
 
-	public void checkPlayerDamage(double x, double y) {
+	public boolean checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {
 			if (Integer.parseInt(this.lives.getText()) <= 1) {
 				this.player.dieEvent();
@@ -206,6 +211,8 @@ public class LevelController {
 				
 				ReadFromFile save = new ReadFromFile(); //record in stats
 				save.lostGame();
+				
+				return true;
 
 			} else {
 				this.audio.playDamageTaken();
@@ -214,9 +221,10 @@ public class LevelController {
 			}
 
 		}
+		return false;
 	}
 
-	public void checkEnemyDamage(double x, double y) {
+	public boolean checkEnemyDamage(double x, double y) {
 		List<Enemy> temp = new ArrayList<>();
 
 		for(Enemy e : this.enemies) {
@@ -233,10 +241,19 @@ public class LevelController {
 
 		//check per vittoria
 		if (this.enemies.size() == 0){
+			this.audio.playSoundtrack(false);
+			this.audio.playGameStart();
 			ReadFromFile save = new ReadFromFile();
 			save.wonGame();
-			this.player.levelComplete();
+
+			Platform.runLater(() ->{ // per thread del timer
+				try {
+					new EndScreen(this.mainStage, "LEVEL\nCOMPLETE");
+				} catch (IOException e1) { e1.printStackTrace(); }
+			});
+			return true;
 		}
+		return false;
 	}
 
 	public List<ImageView> getNearTiles(int x, int y, int radius) {
@@ -300,6 +317,10 @@ public class LevelController {
 	
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public void setStage(Stage stage) {
+		this.mainStage = stage;
 	}
 
 }

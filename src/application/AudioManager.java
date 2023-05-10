@@ -7,9 +7,7 @@ import javafx.scene.media.AudioClip;
 public class AudioManager{
 	private String soundTrackPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/soundtrack.mp3",
 				   gameStartPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/game-start.mp3",
-				   boomPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/boom.mp3",
-				   menuPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/menu.mp3",
-				   selectPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/select.mp3",
+				   boomPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/boom.mp3",				   selectPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/select.mp3",
 				   gameOverPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/game-over.wav",
 				   damageTakenPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/damage-taken.mp3";
 	
@@ -43,11 +41,6 @@ public class AudioManager{
 	public void playBoom() {
 		AudioClip boom = new AudioClip(new File(boomPath).toURI().toString());
 		boom.play();
-	}
-	
-	public void playMenu() {
-		AudioClip menu = new AudioClip(new File(menuPath).toURI().toString());
-		menu.play();
 	}
 	
 	public void playSelect() {
