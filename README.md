@@ -40,7 +40,7 @@
 
 <img src="src/resources/screenshot-menu.png" alt="gameplayScreenshot">
 <img src="src/resources/screenshot-gameplay.png" alt="gameplayScreenshot">
-<img src="src/resources/screenshot-gameplay1.png" alt="gameplayScreenshot">
+<img src="src/resources/screenshot-gamplay1.png" alt="gameplayScreenshot">
 <img src="src/resources/screenshot-stats.png" alt="gameplayScreenshot">
 
 
