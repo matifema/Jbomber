@@ -35,15 +35,14 @@ public class EndScreenController {
 	public void selectNo() {
 		yes.setStyle("-fx-fill:black;");
 		no.setStyle("-fx-fill:white;");
-		
+
 		selected = 0;
 	}
 
 	public void selected() throws IOException {
-		if (selected  == 1){
+		if (selected == 1) {
 			new Level(this.mainStage);
-		}
-		else{
+		} else {
 			new MainMenu(this.mainStage);
 		}
 	}
@@ -52,7 +51,7 @@ public class EndScreenController {
 		this.mainStage = stage;
 	}
 
-	public void setText(String title){
+	public void setText(String title) {
 		this.title.setText(title);
 	}
 }

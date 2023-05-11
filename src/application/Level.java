@@ -1,18 +1,18 @@
 package application;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import controllers.LevelController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.stage.*;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 
 public class Level {
 	private Scene scene;
@@ -27,20 +27,19 @@ public class Level {
 		Parent root = fxmlLoader.load();
 		LevelController controller = fxmlLoader.getController();
 		controller.setStage(stage);
-		
+
 		scene = new Scene(root);
 		mainStage.setScene(scene);
 
-		
 		Player player = new Player(controller.getMap(), this);
-		
+
 		controller.populateSpace();
 		controller.renderBorder();
 		controller.renderWalls();
-		
+
 		controller.setPlayer(player);
 		controller.renderPlayer(player);
-		
+
 		generateEnemies(controller);
 
 		startKeyHandler(scene, controller);
@@ -76,7 +75,7 @@ public class Level {
 
 		enemies.add(bomber);
 		enemies.add(walker);
-		
+
 		controller.setEnemies(enemies);
 
 		// Create a Timeline to move the enemies randomly
@@ -102,16 +101,17 @@ public class Level {
 
 		this.enemyBombsTimeline.setCycleCount(Timeline.INDEFINITE);
 		this.enemyBombsTimeline.play();
-		
 
 	}
 
 	public void playerDied() {
 		try {
 			new EndScreen(this.mainStage, "GAME OVER");
-		
-		} catch (IOException e) { e.printStackTrace();}
-		
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		this.enemyBombsTimeline.stop();
 		this.enemyMovementTimeline.stop();
 	}
@@ -119,6 +119,5 @@ public class Level {
 	public Scene getScene() {
 		return scene;
 	}
-
 
 }

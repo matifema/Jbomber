@@ -27,48 +27,48 @@ public class NewGameController {
     private ToggleGroup toggleGroup = new ToggleGroup();
     private Stage mainStage;
 
-    public NewGameController(){
+    public NewGameController() {
     }
 
-    public void startKeyHandler(Scene scene){
+    public void startKeyHandler(Scene scene) {
         btn1.setToggleGroup(toggleGroup);
         btn2.setToggleGroup(toggleGroup);
         btn3.setToggleGroup(toggleGroup);
 
         scene.setOnKeyPressed(event -> {
-			if (event.getCode() == KeyCode.E) {
+            if (event.getCode() == KeyCode.E) {
                 ReadFromFile write = new ReadFromFile();
-                
-                if(btn1.isSelected()){
+
+                if (btn1.isSelected()) {
                     this.avatar = "avatar1.png";
                 }
 
-                if(btn2.isSelected()){
+                if (btn2.isSelected()) {
                     this.avatar = "avatar2.png";
                 }
 
-                if(btn3.isSelected()){
+                if (btn3.isSelected()) {
                     this.avatar = "avatar3.png";
                 }
 
                 write.setData(List.of(nameField.getText(), "0", "0", "0", "0", this.avatar));
-            
+
                 try {
                     new Level(this.mainStage);
 
-                } catch (IOException e) {e.printStackTrace();}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            if (event.getCode() == KeyCode.ESCAPE){
+            if (event.getCode() == KeyCode.ESCAPE) {
                 // TODO back to menu
             }
-		});
-    
-        
+        });
+
     }
 
     public void setStage(Stage stage) {
         this.mainStage = stage;
     }
-
 
 }

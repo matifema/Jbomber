@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class Stats {
-    private Scene scene;
+	private Scene scene;
 
 	public Stats(Stage mainStage) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/Stats.fxml"));
@@ -20,19 +20,21 @@ public class Stats {
 		this.scene = new Scene(root);
 		mainStage.setScene(scene);
 
-        controller.loadData();
+		controller.loadData();
 
 		// key handling
 		AudioManager audio = new AudioManager();
 		scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ESCAPE){
-                audio.playSelect();
+			if (event.getCode() == KeyCode.ESCAPE) {
+				audio.playSelect();
 				try {
-                    new MainMenu(mainStage);
-                
-				} catch (IOException e) {e.printStackTrace();}
-                
-            }
+					new MainMenu(mainStage);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
 		});
 
 	}

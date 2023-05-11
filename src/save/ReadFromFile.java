@@ -1,22 +1,21 @@
 package save;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.ArrayList;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-
+import java.util.List;
 
 public class ReadFromFile {
     private List<String> data = new ArrayList<>();
     private String filePath = "src/save/saveData.txt";
-     
-    public ReadFromFile(){
+
+    public ReadFromFile() {
     }
 
     public void setData(List<String> data) {
@@ -33,13 +32,15 @@ public class ReadFromFile {
             }
 
             bufferedWriter.close();
-            
-        } catch (IOException e) {System.err.println("Error while saving to file: " + e.getMessage());}
+
+        } catch (IOException e) {
+            System.err.println("Error while saving to file: " + e.getMessage());
+        }
 
         this.data = data;
     }
 
-    public List<String> getData(){
+    public List<String> getData() {
         try {
             File file = new File(filePath);
             FileReader fileReader = new FileReader(file);
@@ -54,44 +55,52 @@ public class ReadFromFile {
 
             bufferedReader.close(); // Close the BufferedReader
 
-        } catch (IOException e) {System.err.println("Error reading from savefile: " + e.getMessage());}
+        } catch (IOException e) {
+            System.err.println("Error reading from savefile: " + e.getMessage());
+        }
 
         return this.data;
     }
-   
-    public void wonGame(){
+
+    public void wonGame() {
 
         List<String> lines;
         try {
             lines = Files.readAllLines(Paths.get(filePath));
-            lines.set(1, (Integer.parseInt(lines.get(1))+1)+""); // won
-            lines.set(3, (Integer.parseInt(lines.get(3))+1)+""); // tot
-    
-            setData(lines);        
-        } catch (IOException e) { e.printStackTrace(); }
+            lines.set(1, (Integer.parseInt(lines.get(1)) + 1) + ""); // won
+            lines.set(3, (Integer.parseInt(lines.get(3)) + 1) + ""); // tot
+
+            setData(lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void lostGame(){
+    public void lostGame() {
 
         List<String> lines;
         try {
             lines = Files.readAllLines(Paths.get(filePath));
-            lines.set(2, (Integer.parseInt(lines.get(1))+1)+""); // lost
-            lines.set(3, (Integer.parseInt(lines.get(3))+1)+""); // tot
-    
-            setData(lines);        
-        } catch (IOException e) { e.printStackTrace(); }
+            lines.set(2, (Integer.parseInt(lines.get(1)) + 1) + ""); // lost
+            lines.set(3, (Integer.parseInt(lines.get(3)) + 1) + ""); // tot
+
+            setData(lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void newLevel(){
+    public void newLevel() {
         List<String> lines;
         try {
             lines = Files.readAllLines(Paths.get(filePath));
-            lines.set(4, (Integer.parseInt(lines.get(4))+1)+""); // level
-    
-            setData(lines);        
-        } catch (IOException e) { e.printStackTrace(); }
+            lines.set(4, (Integer.parseInt(lines.get(4)) + 1) + ""); // level
+
+            setData(lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

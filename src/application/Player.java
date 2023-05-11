@@ -5,9 +5,9 @@ import java.util.List;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.scene.image.ImageView;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class Player {
@@ -83,7 +83,7 @@ public class Player {
 		if (currentX + deltaX > 17 || currentY + deltaY > 16 || currentX + deltaX < 0 || currentY + deltaY < 0) {
 			return false;
 		}
-		
+
 		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null ||
 				this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getId().equals("powerup");
 	}
@@ -109,12 +109,14 @@ public class Player {
 			this.playerBox.setImage(null);
 			Thread.sleep(50);
 			this.playerBox.setImage(playerImg);
-			
-		} catch (InterruptedException e) {e.printStackTrace();}
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
-    public Scene getScene() {
-        return null;
-    }
-	
+	public Scene getScene() {
+		return null;
+	}
+
 }

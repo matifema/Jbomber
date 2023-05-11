@@ -1,6 +1,7 @@
 # Jbomber (SuperBomberMan bad clone)
 
 ## Table of Contents
+
 - [TODO](#TODO)
 - [Features](#features)
 - [How to Play](#how-to-play)
@@ -9,8 +10,8 @@
 - [Built With](#built-with)
 - [Acknowledgments](#acknowledgments)
 
-
 ## TODO:
+
 - Bomb visual glitches (<- probably due to non two-way bind map)
 
 ## Features
@@ -42,7 +43,6 @@
 <img src="src/resources/screenshot-gameplay.png" alt="gameplayScreenshot">
 <img src="src/resources/screenshot-gamplay1.png" alt="gameplayScreenshot">
 <img src="src/resources/screenshot-stats.png" alt="gameplayScreenshot">
-
 
 ## Built With
 

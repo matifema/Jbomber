@@ -22,10 +22,10 @@ public class StatsController {
     @FXML
     Text playedGames;
 
-    public StatsController(){
+    public StatsController() {
     }
 
-    public void loadData(){
+    public void loadData() {
         System.out.println("-- loading data from savefile");
 
         ReadFromFile read = new ReadFromFile();
@@ -36,14 +36,14 @@ public class StatsController {
         this.lostGames.setText(data.get(2));
         this.playedGames.setText(data.get(3));
         this.level.setText(data.get(4));
-        
-        if(data.get(5) != null){
-            Image avatar = new Image(getClass().getResourceAsStream("/resources/"+data.get(5)));
+
+        if (data.get(5) != null) {
+            Image avatar = new Image(getClass().getResourceAsStream("/resources/" + data.get(5)));
             this.avatar.setImage(avatar);
         }
     }
 
-    public void writeData(List<String> data){
+    public void writeData(List<String> data) {
         ReadFromFile read = new ReadFromFile();
         read.setData(data);
         return;

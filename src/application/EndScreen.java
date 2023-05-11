@@ -11,12 +11,12 @@ import javafx.stage.Stage;
 
 public class EndScreen {
 	private Scene scene;
-	
+
 	public EndScreen(Stage stage, String title) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/EndScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		EndScreenController controller = fxmlLoader.getController();
-		
+
 		controller.setStage(stage);
 		controller.setText(title);
 
@@ -38,9 +38,12 @@ public class EndScreen {
 				controller.selectNo();
 				audio.playSelect();
 			}
-			if (event.getCode() == KeyCode.ENTER){
+			if (event.getCode() == KeyCode.ENTER) {
 				try {
-					controller.selected();	} catch (IOException e) {e.printStackTrace();}
+					controller.selected();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}

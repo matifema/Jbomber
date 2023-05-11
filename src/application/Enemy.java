@@ -45,7 +45,11 @@ public class Enemy {
 		translate.setNode(this.enemyBox);
 
 		translate.setByX((-17 + currentX) * 50);
-		translate.setByY((currentY - (this.levelController.getTilePane().getChildren().size() - 272)) * 50);  // TODO Fixa a morte enemy
+		translate.setByY((currentY - (this.levelController.getTilePane().getChildren().size() - 272)) * 50); // TODO
+																												// Fixa
+																												// a
+																												// morte
+																												// enemy
 
 		translate.setDuration(Duration.millis(1));
 		translate.play();
@@ -56,7 +60,7 @@ public class Enemy {
 		int[] randomDirection = directions[new Random().nextInt(directions.length)];
 		int randomX = randomDirection[0], randomY = randomDirection[1];
 
-		if (isMoveValid(randomX, randomY)) {			
+		if (isMoveValid(randomX, randomY)) {
 			move(randomX, randomY);
 		}
 	}
@@ -88,18 +92,20 @@ public class Enemy {
 	}
 
 	public void deathAnimation() {
-		Image death1 = new Image(getClass().getResourceAsStream("/resources/death1-" + this.enemyType + ".png" ));
-		Image death2 = new Image(getClass().getResourceAsStream("/resources/death2-" + this.enemyType + ".png" ));
-		
+		Image death1 = new Image(getClass().getResourceAsStream("/resources/death1-" + this.enemyType + ".png"));
+		Image death2 = new Image(getClass().getResourceAsStream("/resources/death2-" + this.enemyType + ".png"));
+
 		try {
 			enemyBox.setImage(death1);
 			Thread.sleep(200);
 			enemyBox.setImage(death2);
 			Thread.sleep(200);
 			enemyBox.setImage(null);
-		} catch (InterruptedException e) {e.printStackTrace();}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	public ImageView getEnemyNode() {
 		return this.enemyBox;
 	}

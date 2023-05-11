@@ -13,9 +13,9 @@ public class PowerUp {
 	private String type;
 	private Image img;
 	public int x, y;
-	
+
 	public PowerUp(LevelController controller, int x, int y, String typ) {
-		this.img = new Image(getClass().getResourceAsStream("/resources/powerup-"+typ+".png"));
+		this.img = new Image(getClass().getResourceAsStream("/resources/powerup-" + typ + ".png"));
 		this.lvlController = controller;
 		this.map = controller.getMap();
 		this.type = typ;
@@ -27,8 +27,8 @@ public class PowerUp {
 
 	public void onCollect() {
 		map.get(List.of(this.x, this.y)).setImage(null);
-		
-		switch (this.type){
+
+		switch (this.type) {
 			case "life":
 				this.lvlController.addLives(1);
 				return;

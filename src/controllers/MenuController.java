@@ -60,19 +60,17 @@ public class MenuController {
 	public void select(Stage mainStage) throws IOException {
 		switch (selected) {
 			case 1:
-				if (!isDataSaved()){
+				if (!isDataSaved()) {
 					new Level(mainStage);
-				}
-				else{
+				} else {
 					setPlayerInfo(mainStage);
 				}
 				break;
 
 			case 2:
-				if (!isDataSaved()){
+				if (!isDataSaved()) {
 					new Stats(mainStage);
-				}
-				else{
+				} else {
 					setPlayerInfo(mainStage);
 				}
 				break;
@@ -86,7 +84,6 @@ public class MenuController {
 		}
 	}
 
-
 	private void setPlayerInfo(Stage mainStage) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/NewGame.fxml"));
 		Parent root = fxmlLoader.load();
@@ -94,13 +91,12 @@ public class MenuController {
 		Scene scene = new Scene(root);
 		controller.setStage(mainStage);
 		controller.startKeyHandler(scene);
-		
-		mainStage.setScene(scene);
 
+		mainStage.setScene(scene);
 
 	}
 
-	public boolean isDataSaved(){
+	public boolean isDataSaved() {
 		ReadFromFile read = new ReadFromFile();
 
 		return (read.getData().get(2) == null);

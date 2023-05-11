@@ -21,6 +21,7 @@ public class Bomb {
 	private int expRadius;
 	private boolean gameEnded = false;
 	private List<ImageView> spawnableTiles = new ArrayList<>();
+	private ImageView bombView;
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
@@ -35,6 +36,7 @@ public class Bomb {
 		if (map.get(List.of(x, y)).getImage() == null) {
 			map.get(List.of(x, y)).setImage(this.bomb);
 			map.get(List.of(x, y)).setId("bomb");
+			bombView = map.get(List.of(x, y)); 
 			startCountDown();
 			isExploded = false;
 		}
@@ -67,14 +69,26 @@ public class Bomb {
 						this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
 				}
 
-				tile.setImage(boom);
+				if(tile.getId().equals("") ||  tile == this.bombView){
+					tile.setImage(boom);
+				}
 				tile.setId("");
 			}
 			else {
-				if (!tile.getImage().equals(this.bomb)) {
+				if (tile == this.bombView || tile.getId().equals("wall")) {
 					tile.setImage(boom);
 				}
 				
+				if (tile.getId().equals("bomb")){
+					this.gameEnded =
+						this.lvl.checkPlayerDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);
+				
+					if(this.placedBy.equals("player")) {
+						this.gameEnded = 
+							this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
+					}
+				}
+
 
 				if(this.placedBy.equals("player")) {
 					this.destructedWalls++;
