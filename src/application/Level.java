@@ -68,13 +68,13 @@ public class Level {
 	}
 
 	private void generateEnemies(LevelController controller) {
-		//Enemy bomber = new Enemy(controller.getMap(), controller, "bomber");
-		//controller.renderEnemies(bomber);
+		Enemy bomber = new Enemy(controller.getMap(), controller, "bomber");
+		controller.renderEnemies(bomber);
 
 		Enemy walker = new Enemy(controller.getMap(), controller, "walker");
 		controller.renderEnemies(walker);
 
-		//enemies.add(bomber);
+		enemies.add(bomber);
 		enemies.add(walker);
 		
 		controller.setEnemies(enemies);

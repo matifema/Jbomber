@@ -88,7 +88,6 @@ public class Bomb {
 		}
 		
 		if (!gameEnded){
-			System.out.println("game not ended");
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
