@@ -38,7 +38,10 @@
 
 ## Screenshots
 
-<img src="src/resources/readme-img.png" alt="gameplayScreenshot" width="850" height="900">
+<img src="src/resources/screenshot-menu.png" alt="gameplayScreenshot">
+<img src="src/resources/screenshot-gameplay.png" alt="gameplayScreenshot">
+<img src="src/resources/screenshot-gameplay1.png" alt="gameplayScreenshot">
+<img src="src/resources/screenshot-stats.png" alt="gameplayScreenshot">
 
 
 ## Built With
