@@ -12,7 +12,6 @@
 
 ## TODO:
 - Bomb visual glitches (<- probably due to non two-way bind map)
-- NG+ (colors)
 
 ## Features
 
