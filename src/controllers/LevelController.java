@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import application.AudioManager;
 import application.Bomb;
@@ -167,18 +168,20 @@ public class LevelController {
 	}
 
 	public void clearLevel() {
-		for (int y = 0; y < nRows; y++) {
-			for (int x = 0; x < nCols; x++) {
-				if (map.get(List.of(x, y)).getImage() != wall) {
-					map.get(List.of(x, y)).setImage(null);
-					map.get(List.of(x, y)).setId("");
-				}
-			}
-		}
+		IntStream.range(0, nRows)
+				.forEach(y ->
+						IntStream.range(0, nCols)
+								.filter(x -> map.get(List.of(x, y)).getImage() != wall)
+								.forEach(x -> {
+									ImageView tile = map.get(List.of(x, y));
+									tile.setImage(null);
+									tile.setId("");
+								}));
+	
 		// 306 perche il player è aggiunto per ultimo, ovvero 17*18-1
 		tilePane.getChildren().remove(306);
 	}
-
+	
 	public void placeBomb(String placedBy, int x, int y) {
 		if (placedBy.equals("player") && (this.placedBomb == null || this.placedBomb.isExploded)) {
 			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY(), placedBy, this.explosionPower);
@@ -198,22 +201,22 @@ public class LevelController {
 		}
 	}
 
-	private void checkEntities() { // checks for enemies and powerups after moving
+	private void checkEntities() {
 		List<PowerUp> temp = new ArrayList<>();
-
-		for (PowerUp p : this.powerUps) {
-			if (this.player.currentX == p.x && this.player.currentY == p.y) {
-				p.onCollect();
-				temp.add(p);
-				System.out.println("-- collecting powerup");
-			}
-		}
+	
+		this.powerUps.stream()
+				.filter(p -> this.player.currentX == p.x && this.player.currentY == p.y)
+				.forEach(p -> {
+					p.onCollect();
+					temp.add(p);
+					System.out.println("-- collecting powerup");
+				});
+	
 		this.powerUps.removeAll(temp);
-
-		for (Enemy e : this.enemies) {
-			checkPlayerDamage(e.currentX, e.currentY);
-		}
+	
+		this.enemies.forEach(e -> checkPlayerDamage(e.currentX, e.currentY));
 	}
+	
 
 	public boolean checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {

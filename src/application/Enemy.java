@@ -45,11 +45,7 @@ public class Enemy {
 		translate.setNode(this.enemyBox);
 
 		translate.setByX((-17 + currentX) * 50);
-		translate.setByY((currentY - (this.levelController.getTilePane().getChildren().size() - 272)) * 50); // TODO
-																												// Fixa
-																												// a
-																												// morte
-																												// enemy
+		translate.setByY((currentY - (this.levelController.getTilePane().getChildren().size() - 272)) * 50);
 
 		translate.setDuration(Duration.millis(1));
 		translate.play();

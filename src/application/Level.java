@@ -3,6 +3,8 @@ package application;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import controllers.LevelController;
 import javafx.animation.KeyFrame;
@@ -69,40 +71,39 @@ public class Level {
 	private void generateEnemies(LevelController controller) {
 		Enemy bomber = new Enemy(controller.getMap(), controller, "bomber");
 		controller.renderEnemies(bomber);
-
+	
 		Enemy walker = new Enemy(controller.getMap(), controller, "walker");
 		controller.renderEnemies(walker);
-
-		enemies.add(bomber);
-		enemies.add(walker);
+	
+		List<Enemy> enemies = List.of(walker, bomber);
 
 		controller.setEnemies(enemies);
-
+	
 		// Create a Timeline to move the enemies randomly
 		this.enemyMovementTimeline = new Timeline(new KeyFrame(Duration.millis(800), event -> {
-			for (Enemy e : enemies) {
+			enemies.forEach(e -> {
 				e.moveEnemy();
 				controller.checkPlayerDamage(e.currentX, e.currentY);
-			}
+			});
 		}));
 		this.enemyMovementTimeline.setCycleCount(Timeline.INDEFINITE);
 		this.enemyMovementTimeline.play();
-
+	
 		// Create a Timeline to place bombs
 		this.enemyBombsTimeline = new Timeline(new KeyFrame(Duration.millis(3500), event -> {
-			for (Enemy e : enemies) {
-				if (e.enemyType == "bomber") {
-					e.placeBomb();
-					e.moveEnemy();
-					controller.checkPlayerDamage(e.currentX, e.currentY);
-				}
-			}
+			enemies.stream()
+					.filter(e -> e.enemyType.equals("bomber"))
+					.forEach(e -> {
+						e.placeBomb();
+						e.moveEnemy();
+						controller.checkPlayerDamage(e.currentX, e.currentY);
+					});
 		}));
-
+	
 		this.enemyBombsTimeline.setCycleCount(Timeline.INDEFINITE);
 		this.enemyBombsTimeline.play();
-
 	}
+	
 
 	public void playerDied() {
 		try {
