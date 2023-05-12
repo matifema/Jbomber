@@ -1,10 +1,7 @@
 package application;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import controllers.LevelController;
 import javafx.animation.KeyFrame;
@@ -19,7 +16,6 @@ import javafx.util.Duration;
 public class Level {
 	private Scene scene;
 	private Stage mainStage;
-	private List<Enemy> enemies = new ArrayList<>();
 	private Timeline enemyMovementTimeline, enemyBombsTimeline;
 
 	public Level(Stage stage) throws IOException {
