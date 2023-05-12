@@ -16,9 +16,9 @@ import javafx.util.Duration;
 
 public class Level {
 	private Scene scene;
+	private Stage mainStage;
 	private List<Enemy> enemies = new ArrayList<>();
 	private Timeline enemyMovementTimeline, enemyBombsTimeline;
-	private Stage mainStage;
 
 	public Level(Stage stage) throws IOException {
 		this.mainStage = stage;

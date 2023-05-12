@@ -11,14 +11,13 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class Player {
-	private ImageView playerBox;
-	private Image playerImg = new Image(getClass().getResourceAsStream("/resources/player-static.png")),
-			playerDeath1 = new Image(getClass().getResourceAsStream("/resources/player-death-1.png")),
-			playerDeath2 = new Image(getClass().getResourceAsStream("/resources/player-death-2.png"));
-
-	private HashMap<List<Integer>, ImageView> levelMap;
-	public int currentX, currentY;
 	private Level level;
+	private ImageView playerBox;
+	public Integer currentX, currentY;
+	private HashMap<List<Integer>, ImageView> levelMap;
+	private Image   playerImg = new Image(getClass().getResourceAsStream("/resources/player-static.png")),
+					playerDeath1 = new Image(getClass().getResourceAsStream("/resources/player-death-1.png")),
+					playerDeath2 = new Image(getClass().getResourceAsStream("/resources/player-death-2.png"));
 
 	public Player(HashMap<List<Integer>, ImageView> levelMap, Level level) {
 		this.levelMap = levelMap;

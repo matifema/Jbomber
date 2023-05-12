@@ -10,21 +10,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Bomb {
-	private AudioManager audio = new AudioManager();
-	private HashMap<List<Integer>, ImageView> map;
-	private int destructedWalls = 0, x, y;
-	public boolean isExploded;
-	private LevelController lvl;
-	private Image bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png"));
-	public Image boom;
 	private String placedBy;
-	private int expRadius;
-	private boolean gameEnded = false;
-	private List<ImageView> spawnableTiles = new ArrayList<>();
+	public boolean isExploded, gameEnded = false;
 	private ImageView bombView;
+	private LevelController lvl;
+	private Integer destructedWalls = 0, x, y, expRadius;
+	private HashMap<List<Integer>, ImageView> map;
+	private AudioManager audio = new AudioManager();
+	private List<ImageView> spawnableTiles = new ArrayList<>();
+	private Image 	bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png")),
+					boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
-		this.boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
 		this.map = level.getMap();
 		this.placedBy = placedBy;
 		this.expRadius = expR;

@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Jbomber">
+    <output-path>$PROJECT_DIR$/classes/artifacts/Jbomber</output-path>
+    <root id="archive" name="Jbomber.jar">
+      <element id="module-output" name="Jbomber" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx.media.jar" path-in-jar="/" />
+      <element id="library" level="application" name="javafx-sdk-20" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx.graphics.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx.web.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/MetodologieDiProgrammazione/javafx-sdk-20/lib/javafx.controls.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

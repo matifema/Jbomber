@@ -15,9 +15,9 @@ public class Enemy {
 	private Image enemyImg;
 	private LevelController levelController;
 	private String bomber = "/resources/enemy1-static.png", walker = "/resources/enemy2-static.png";
+    public String enemyType;
 	private HashMap<List<Integer>, ImageView> levelMap;
-	public int currentX, currentY;
-	public String enemyType;
+	public Integer currentX, currentY;
 
 	public Enemy(HashMap<List<Integer>, ImageView> levelMap, LevelController controller, String type) {
 		this.levelController = controller;
