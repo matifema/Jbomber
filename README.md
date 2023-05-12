@@ -2,17 +2,12 @@
 
 ## Table of Contents
 
-- [TODO](#TODO)
 - [Features](#features)
 - [How to Play](#how-to-play)
 - [Controls](#controls)
 - [Screenshots](#screenshots)
 - [Built With](#built-with)
 - [Acknowledgments](#acknowledgments)
-
-## TODO:
-
-- Bomb visual glitches (<- probably due to non two-way bind map)
 
 ## Features
 
