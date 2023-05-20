@@ -17,6 +17,7 @@ import application.EndScreen;
 import application.Enemy;
 import application.Player;
 import application.PowerUp;
+import application.save.ReadFromFile;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.effect.ColorAdjust;
@@ -30,7 +31,6 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import save.ReadFromFile;
 
 public class LevelController {
 	@FXML
@@ -47,12 +47,12 @@ public class LevelController {
 			border = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/barrier.png", 50, 50, false, true),
 			wall = new Image("file:/home/a/eclipse-workspace/Jbomber/src/resources/wall.png", 50, 50, false, true);
 
-	private Integer scorePoints = 0, explosionPower = 1, livesScore = 5;
-	private Player player;
+	private Integer scorePoints = 0, explosionPower = 1, livesScore = 3;
+	private Player player = new Player();
 	private Bomb placedBomb;
 	private AudioManager audio = new AudioManager();
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
-	private List<Enemy> enemies;
+	private LinkedList<Enemy> enemies = new LinkedList<Enemy>();
 	public List<PowerUp> powerUps = new ArrayList<>();
 	private Stage mainStage;
 
@@ -82,7 +82,7 @@ public class LevelController {
 
 				tilePane.getChildren().add(tile);
 				map.put(List.of(x, y), tile);
-				
+
 			}
 		}
 	}
@@ -101,6 +101,7 @@ public class LevelController {
 				} else {
 					if (x % 2 == 0 && y % 2 != 0) {
 						map.get(List.of(x, y)).setImage(border);
+						map.get(List.of(x, y)).setId("border");
 						map.get(List.of(x, y)).setEffect(ca);
 					}
 				}
@@ -128,60 +129,51 @@ public class LevelController {
 		}
 	}
 
-	public void renderPlayer(Player player) {
+	public void renderEntity(Object entity) {
 		Random rand = new Random();
 		int x, y;
 
-		do {
-			x = rand.nextInt(1, nCols - 1);
-			y = rand.nextInt(3, nRows - 1);
+		do { // trova posto (inefficiente)
+			x = rand.nextInt(1, nCols - 2);
+			y = rand.nextInt(0, nRows - 2);
+		} while ((map.get(List.of(x, y)).getImage() != null));
 
-		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y, 1).contains(null))); // spawns in
-																											// tile con
-																											// spazio
-																											// libero
+		if (entity.getClass().equals(this.player.getClass())) { // render player
+			this.player = (Player) entity;
 
-		player.currentX = x;
-		player.currentY = y;
-		player.spawnPlayer();
+			this.player.currentX = x;
+			this.player.currentY = y;
+			this.player.spawnPlayer();
 
-		tilePane.getChildren().add(player.getPlayerNode());
+			tilePane.getChildren().add(this.player.getPlayerNode());
+			this.lives.setText("" + livesScore);
 
-		this.lives.setText("" + livesScore);
-	}
+		} else { // render enemy
 
-	public void renderEnemies(Enemy enemies) {
-		Random rand = new Random();
-		int x, y;
+			System.out.println("-- enemy spawned.. " + x + "," + y);
 
-		do {
-			x = rand.nextInt(1, nCols - 1);
-			y = rand.nextInt(3, nRows - 1);
+			((Enemy) entity).currentX = x;
+			((Enemy) entity).currentY = y;
+			((Enemy) entity).spawnEnemy(this.map);
 
-		} while ((map.get(List.of(x, y)).getImage() != null) && !(getNearTiles(x, y, 1).contains(null)));
-
-		enemies.currentX = x;
-		enemies.currentY = y;
-		enemies.spawnEnemy();
-
-		tilePane.getChildren().add(enemies.getEnemyNode());
+			this.enemies.add(((Enemy) entity));
+		}
 	}
 
 	public void clearLevel() {
 		IntStream.range(0, nRows)
-				.forEach(y ->
-						IntStream.range(0, nCols)
-								.filter(x -> map.get(List.of(x, y)).getImage() != wall)
-								.forEach(x -> {
-									ImageView tile = map.get(List.of(x, y));
-									tile.setImage(null);
-									tile.setId("");
-								}));
-	
+				.forEach(y -> IntStream.range(0, nCols)
+						.filter(x -> map.get(List.of(x, y)).getImage() != wall)
+						.forEach(x -> {
+							ImageView tile = map.get(List.of(x, y));
+							tile.setImage(null);
+							tile.setId("");
+						}));
+
 		// 306 perche il player è aggiunto per ultimo, ovvero 17*18-1
 		tilePane.getChildren().remove(306);
 	}
-	
+
 	public void placeBomb(String placedBy, int x, int y) {
 		if (placedBy.equals("player") && (this.placedBomb == null || this.placedBomb.isExploded)) {
 			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY(), placedBy, this.explosionPower);
@@ -193,7 +185,7 @@ public class LevelController {
 
 	public void movePlayer(int x, int y) {
 		if (this.player.isMoveValid(x, y)) {
-			this.player.movePlayer(x, y);
+			this.player.movePlayer(map, x, y);
 			checkEntities();
 
 		} else {
@@ -201,22 +193,19 @@ public class LevelController {
 		}
 	}
 
-	private void checkEntities() {
-		List<PowerUp> temp = new ArrayList<>();
-	
+	private boolean checkEntities() {
 		this.powerUps.stream()
 				.filter(p -> this.player.currentX == p.x && this.player.currentY == p.y)
 				.forEach(p -> {
 					p.onCollect();
-					temp.add(p);
-					System.out.println("-- collecting powerup");
 				});
-	
-		this.powerUps.removeAll(temp);
-	
-		this.enemies.forEach(e -> checkPlayerDamage(e.currentX, e.currentY));
+
+		this.powerUps.removeIf((pwrUp) -> {
+			return pwrUp.collected;
+		}); // rimuove i collezionati
+
+		return false;
 	}
-	
 
 	public boolean checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {
@@ -224,7 +213,7 @@ public class LevelController {
 				this.player.dieEvent();
 				this.audio.playGameOver();
 				this.audio.playSoundtrack(false);
-				this.lives.setText("" + this.livesScore--);
+				addLives(-1);
 
 				ReadFromFile save = new ReadFromFile(); // record in stats
 				save.lostGame();
@@ -234,7 +223,7 @@ public class LevelController {
 			} else {
 				this.audio.playDamageTaken();
 				this.player.damageAnimation();
-				this.lives.setText("" + this.livesScore--);
+				addLives(-1);
 			}
 
 		}
@@ -245,9 +234,9 @@ public class LevelController {
 		List<Enemy> temp = new ArrayList<>();
 
 		for (Enemy e : this.enemies) {
-			if (e.getX() == x && e.getY() == y) {
+			if (e.currentX == x && e.currentY == y) {
+				e.die();
 				this.audio.playDamageTaken();
-				e.deathAnimation();
 				temp.add(e);
 			}
 		}
@@ -262,7 +251,6 @@ public class LevelController {
 			this.audio.playGameStart();
 
 			ReadFromFile saveFile = new ReadFromFile();
-			saveFile.newLevel();
 			saveFile.wonGame();
 
 			Platform.runLater(() -> { // per thread del timer
@@ -293,18 +281,14 @@ public class LevelController {
 				if (!visited.add(pos)) {
 					break;
 				}
-				ImageView wall = map.get(pos);
+				ImageView tile = map.get(pos);
 
-				if (wall == null) {
-					continue;
-				}
-
-				if (wall.getImage() != null) {
-					if (wall.getImage().equals(border)) {
+				if (map.values().contains(tile)) {
+					if (tile.getId().equals("border")) {
 						break;
 					}
+					nearWalls.add(tile);
 				}
-				nearWalls.add(wall);
 			}
 		}
 		return nearWalls;
@@ -332,16 +316,32 @@ public class LevelController {
 		return this.tilePane;
 	}
 
-	public void setEnemies(List<Enemy> enemies) {
-		this.enemies = enemies;
+	public void setEnemies(LinkedList<Enemy> enemies) {
+		for (Enemy e : enemies) {
+			renderEntity(e);
+		}
+
+		this.enemies.addAll(enemies);
 	}
 
-	public void setPlayer(Player player) {
+	public void renderPla(Player player) {
 		this.player = player;
 	}
 
 	public void setStage(Stage stage) {
 		this.mainStage = stage;
+	}
+
+	public LinkedList<Enemy> getEnemies() {
+		return this.enemies;
+	}
+
+	public void stopEnemyTimeline() {
+		for (Enemy e : this.enemies) {
+			e.die();
+		}
+		this.enemies.removeAll(this.enemies);
+
 	}
 
 }

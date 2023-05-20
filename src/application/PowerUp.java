@@ -13,6 +13,7 @@ public class PowerUp {
 	private String type;
 	private Image img;
 	public int x, y;
+	public boolean collected = false;
 
 	public PowerUp(LevelController controller, int x, int y, String typ) {
 		this.img = new Image(getClass().getResourceAsStream("/resources/powerup-" + typ + ".png"));
@@ -23,10 +24,14 @@ public class PowerUp {
 		this.y = y;
 
 		map.get(List.of(x, y)).setImage(this.img);
+		map.get(List.of(x, y)).setId("powerup");
 	}
 
 	public void onCollect() {
-		map.get(List.of(this.x, this.y)).setImage(null);
+		this.collected = true;
+		this.lvlController.getMap().get(List.of(this.x, this.y)).setId("");
+
+		System.out.println("-- picked up.. " + this.type);
 
 		switch (this.type) {
 			case "life":

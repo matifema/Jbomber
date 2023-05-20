@@ -1,7 +1,6 @@
 package application;
 
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -12,14 +11,12 @@ import javafx.scene.image.ImageView;
 public class Bomb {
 	private String placedBy;
 	public boolean isExploded, gameEnded = false;
-	private ImageView bombView;
 	private LevelController lvl;
 	private Integer destructedWalls = 0, x, y, expRadius;
 	private HashMap<List<Integer>, ImageView> map;
 	private AudioManager audio = new AudioManager();
-	private List<ImageView> spawnableTiles = new ArrayList<>();
-	private Image 	bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png")),
-					boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
+	private Image bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png")),
+			boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.map = level.getMap();
@@ -30,13 +27,11 @@ public class Bomb {
 		this.y = placedY;
 
 		// place bomb
-		if (map.get(List.of(x, y)).getImage() == null) {
-			map.get(List.of(x, y)).setImage(this.bomb);
-			map.get(List.of(x, y)).setId("bomb");
-			bombView = map.get(List.of(x, y)); 
-			startCountDown();
-			isExploded = false;
-		}
+		map.get(List.of(x, y)).setImage(this.bomb);
+		map.get(List.of(x, y)).setId("bomb");
+		startCountDown();
+		isExploded = false;
+
 	}
 
 	public void startCountDown() {
@@ -46,7 +41,7 @@ public class Bomb {
 				isExploded = true;
 				boom();
 			}
-		}, 3000);
+		}, 1500);
 	}
 
 	private void boom() {
@@ -55,50 +50,43 @@ public class Bomb {
 	}
 
 	private void explosion(List<ImageView> nearTiles) {
+
+		this.lvl.getMap().get(List.of(this.x, this.y)).setImage(boom);
+
 		for (ImageView tile : nearTiles) {
-			if (tile.getImage() == null || (tile.getLayoutX() / 50 == x && tile.getLayoutY() / 50 == y)) {
-				
-				this.gameEnded =
-					this.lvl.checkPlayerDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);
-				
-				if(this.placedBy.equals("player")) {
-					this.gameEnded = 
-						this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
-				}
+			int tileX = (int) (tile.getLayoutX() / 50), tileY = (int) (tile.getLayoutY() / 50);
 
-				if(tile.getId().equals("") ||  tile == this.bombView){
-					tile.setImage(boom);
-				}
-				tile.setId("");
+			if (tile.getId().equals("")) {
+				this.lvl.getMap().get(List.of(tileX, tileY)).setImage(boom);
 			}
-			else {
-				if (tile == this.bombView || tile.getId().equals("wall")) {
-					tile.setImage(boom);
-				}
-				
-				if (tile.getId().equals("bomb")){
-					this.gameEnded =
-						this.lvl.checkPlayerDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);
-				
-					if(this.placedBy.equals("player")) {
-						this.gameEnded = 
-							this.lvl.checkEnemyDamage(tile.getLayoutX() / 50, tile.getLayoutY() / 50);					
-					}
-				}
 
+			if (tile.getId().equals("wall")) {
+				this.lvl.getMap().get(List.of(tileX, tileY)).setImage(boom);
 
-				if(this.placedBy.equals("player")) {
+				if (this.placedBy.equals("player")) {
+					spawnPowerUp(tile);
 					this.destructedWalls++;
-					// aggiungo ex wall tile a lista per spawnare powerup
-					this.spawnableTiles.add(tile);
 				}
 			}
-			if(this.gameEnded){
-				break;
+
+			if (tile.getId().equals("enemy") && this.placedBy.equals("player")) {
+				this.gameEnded = this.lvl.checkEnemyDamage(tileX, tileY);
+				if (this.gameEnded) {
+					break;
+				}
 			}
+
+			if (tile.getId().equals("player")) {
+				this.gameEnded = this.lvl.checkPlayerDamage(tileX, tileY);
+
+				if (this.gameEnded) {
+					break;
+				}
+			}
+
 		}
-		
-		if (!gameEnded){
+
+		if (!gameEnded) {
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
@@ -111,13 +99,13 @@ public class Bomb {
 
 	}
 
-	private PowerUp spawnPowerUp(ImageView tile) {
+	private void spawnPowerUp(ImageView tile) {
 		int rand = new Random().nextInt(0, 3);
-		
-		if(rand == 0) {
+
+		if (rand == 0) {
 			String type = "";
 			rand = new Random().nextInt(0, 3);
-			
+
 			switch (rand) {
 				case 0:
 					type += "life";
@@ -131,34 +119,24 @@ public class Bomb {
 				default:
 					break;
 			}
-			
-			tile.setId("powerup"); // setta id di powerup
-			System.out.println("spawning.. " + type);
+			this.lvl.powerUps.add(
+					new PowerUp(this.lvl, (int) tile.getLayoutX() / 50, (int) tile.getLayoutY() / 50, type));
 
-			return new PowerUp(this.lvl, (int)tile.getLayoutX()/50, (int)tile.getLayoutY()/50, type);
+			System.out.println("-- spawning.. " + type);
 		}
-		return null;
 	}
-	
+
 	private void updateLevelScore() {
 		this.lvl.addScore(destructedWalls * 100);
 	}
 
 	private void clear(List<ImageView> nearTiles) {
-
-		for (ImageView wall : nearTiles) {
-			if (wall.getImage() != null) {
-				if (wall.getImage().equals(boom)) {
-					wall.setImage(null);
-				}
-				if (this.spawnableTiles.contains(wall)) {
-					PowerUp powerUp = spawnPowerUp(wall);
-					
-					if(powerUp != null) {
-						this.lvl.powerUps.add(powerUp);						
-					}
-				}
+		for (ImageView tile : nearTiles) {
+			if (tile.getImage() != null && tile.getImage().equals(boom)) {
+				tile.setImage(null);
+				tile.setId("");
 			}
+			tile.setEffect(null);
 		}
 	}
 

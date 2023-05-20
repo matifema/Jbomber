@@ -1,4 +1,4 @@
-package save;
+package application.save;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ReadFromFile {
     private List<String> data = new ArrayList<>();
-    private String filePath = "src/save/saveData.txt";
+    private String filePath = "src/application/save/saveData.txt";
 
     public ReadFromFile() {
     }

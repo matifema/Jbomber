@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import application.Level;
+import application.save.ReadFromFile;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
@@ -11,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import save.ReadFromFile;
 
 public class NewGameController {
     @FXML

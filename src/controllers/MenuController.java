@@ -5,13 +5,13 @@ import java.io.IOException;
 import application.AudioManager;
 import application.Level;
 import application.Stats;
+import application.save.ReadFromFile;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import save.ReadFromFile;
 
 public class MenuController {
 	@FXML

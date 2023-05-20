@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import controllers.LevelController;
-import javafx.animation.TranslateTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -15,49 +16,52 @@ public class Enemy {
 	private Image enemyImg;
 	private LevelController levelController;
 	private String bomber = "/resources/enemy1-static.png", walker = "/resources/enemy2-static.png";
-    public String enemyType;
-	private HashMap<List<Integer>, ImageView> levelMap;
+	public String enemyType;
 	public Integer currentX, currentY;
+	private Timeline enemyMovementTimeline;
+	private Timeline enemyBombsTimeline;
+	private boolean isAlive;
 
-	public Enemy(HashMap<List<Integer>, ImageView> levelMap, LevelController controller, String type) {
+	public Enemy(LevelController controller, String type) {
+		this.isAlive = true;
+		this.enemyBox = new ImageView(enemyImg);
+		this.enemyBox.setFitHeight(50);
+		this.enemyBox.setFitWidth(50);
 		this.levelController = controller;
-		this.levelMap = levelMap;
 		this.enemyType = type;
 		this.currentX = 0;
 		this.currentY = 0;
 
 		if (type.equals("bomber")) {
 			this.enemyImg = new Image(getClass().getResourceAsStream(bomber));
-		}
-		if (type.equals("walker")) {
+		} else {
 			this.enemyImg = new Image(getClass().getResourceAsStream(walker));
 		}
-
-		spawnEnemy();
 	}
 
-	public void spawnEnemy() {
-		this.enemyBox = new ImageView(enemyImg);
-		this.enemyBox.setFitHeight(50);
-		this.enemyBox.setFitWidth(50);
-
-		TranslateTransition translate = new TranslateTransition();
-		translate.setNode(this.enemyBox);
-
-		translate.setByX((-17 + currentX) * 50);
-		translate.setByY((currentY - (this.levelController.getTilePane().getChildren().size() - 272)) * 50);
-
-		translate.setDuration(Duration.millis(1));
-		translate.play();
+	public void spawnEnemy(HashMap<List<Integer>, ImageView> levelMap) {
+		this.enemyBox = levelMap.get(List.of(currentX, currentY));
+		this.enemyBox.setImage(this.enemyImg);
+		this.enemyBox.setId("enemy");
+		startBehaviour(levelMap);
 	}
 
-	public void moveEnemy() {
+	public void moveEnemy(HashMap<List<Integer>, ImageView> levelMap) {
 		int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 		int[] randomDirection = directions[new Random().nextInt(directions.length)];
 		int randomX = randomDirection[0], randomY = randomDirection[1];
 
-		if (isMoveValid(randomX, randomY)) {
-			move(randomX, randomY);
+		if (isMoveValid(randomX, randomY, levelMap)) {
+			if (this.enemyBox.getId().equals("enemy")) {
+				this.enemyBox.setImage(null);
+				this.enemyBox.setId("");
+			}
+			this.enemyBox = levelMap.get(List.of(currentX + randomX, currentY + randomY));
+			this.enemyBox.setImage(this.enemyImg);
+			this.enemyBox.setId("enemy");
+
+			this.currentX += randomX;
+			this.currentY += randomY;
 		}
 	}
 
@@ -65,41 +69,74 @@ public class Enemy {
 		this.levelController.placeBomb("enemy", this.currentX, this.currentY);
 	}
 
-	public void move(int x, int y) {
-		TranslateTransition translate = new TranslateTransition();
-		translate.setNode(this.enemyBox);
-
-		currentX += x;
-		currentY += y;
-
-		translate.setByX(x * 50);
-		translate.setByY(y * 50);
-		translate.setDuration(Duration.millis(1));
-		translate.play();
-
-	}
-
-	public boolean isMoveValid(int deltaX, int deltaY) {
-		if (currentX + deltaX > 17 || currentY + deltaY > 16 || currentX + deltaX < 0 || currentY + deltaY < 0) {
+	public boolean isMoveValid(int deltaX, int deltaY, HashMap<List<Integer>, ImageView> levelMap) {
+		if (this.currentX + deltaX > 15 ||
+				this.currentY + deltaY > 14 ||
+				this.currentX + deltaX < 1 ||
+				this.currentY + deltaY < 0) {
 			return false;
 		}
 
-		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null;
+		boolean imageIsNull = levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null;
+
+		if (imageIsNull) {
+			return true;
+		}
+
+		return false;
 	}
 
-	public void deathAnimation() {
+	public void startBehaviour(HashMap<List<Integer>, ImageView> levelMap) {
+
+		// Create a Timeline to move the enemies randomly
+		this.enemyMovementTimeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
+			moveEnemy(levelMap);
+			levelController.checkPlayerDamage(currentX, currentY);
+
+		}));
+		this.enemyMovementTimeline.setCycleCount(Timeline.INDEFINITE);
+		this.enemyMovementTimeline.play();
+
+		if (this.enemyType.equals("bomber")) {
+			// Create a Timeline to place bombs
+			this.enemyBombsTimeline = new Timeline(new KeyFrame(Duration.millis(5000), event -> {
+				placeBomb();
+
+			}));
+			this.enemyBombsTimeline.setCycleCount(Timeline.INDEFINITE);
+			this.enemyBombsTimeline.play();
+		}
+	}
+
+	public void die() {
+
+		if (!isAlive) {
+			return; // Se il nemico non è vivo, non facciamo nulla
+		}
+
+		isAlive = false;
+
 		Image death1 = new Image(getClass().getResourceAsStream("/resources/death1-" + this.enemyType + ".png"));
 		Image death2 = new Image(getClass().getResourceAsStream("/resources/death2-" + this.enemyType + ".png"));
 
-		try {
-			enemyBox.setImage(death1);
-			Thread.sleep(200);
+		stopBehaviour();
+		this.levelController.getMap().get(List.of(currentX, currentY)).setId("");
+
+		enemyBox.setImage(death1);
+
+		// Cambio l'immagine a 'death2' dopo 100 millisecondi
+		Timeline deathAnimation = new Timeline();
+		deathAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(100), event -> {
 			enemyBox.setImage(death2);
-			Thread.sleep(200);
-			enemyBox.setImage(null);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		}));
+
+		// Rimuovo l'immagine dopo altri 100 millisecondi
+		deathAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), event -> {
+			this.enemyBox.setImage(null);
+			this.enemyBox.setId("");
+		}));
+
+		deathAnimation.play();
 	}
 
 	public ImageView getEnemyNode() {
@@ -112,6 +149,17 @@ public class Enemy {
 
 	public int getY() {
 		return this.currentY;
+	}
+
+	public void stopBehaviour() {
+		try {
+			System.out.println("-- enemy timelines stopped");
+
+			this.enemyMovementTimeline.stop();
+			this.enemyBombsTimeline.stop();
+		} catch (Exception e) {
+			System.out.println("-- enemy (walker exception) timelines stopped");
+		}
 	}
 
 }

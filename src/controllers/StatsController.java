@@ -2,11 +2,11 @@ package controllers;
 
 import java.util.List;
 
+import application.save.ReadFromFile;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import save.ReadFromFile;
 
 public class StatsController {
     @FXML

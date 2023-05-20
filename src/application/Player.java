@@ -3,8 +3,10 @@ package application;
 import java.util.HashMap;
 import java.util.List;
 
-import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
+import controllers.LevelController;
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,67 +17,57 @@ public class Player {
 	private ImageView playerBox;
 	public Integer currentX, currentY;
 	private HashMap<List<Integer>, ImageView> levelMap;
-	private Image   playerImg = new Image(getClass().getResourceAsStream("/resources/player-static.png")),
-					playerDeath1 = new Image(getClass().getResourceAsStream("/resources/player-death-1.png")),
-					playerDeath2 = new Image(getClass().getResourceAsStream("/resources/player-death-2.png"));
+	private Image playerImg = new Image(getClass().getResourceAsStream("/resources/gabboplayer.png")),
+			playerDeath1 = new Image(getClass().getResourceAsStream("/resources/player-death-1.png")),
+			playerDeath2 = new Image(getClass().getResourceAsStream("/resources/player-death-2.png"));
+	private LevelController levelcontroller;
 
-	public Player(HashMap<List<Integer>, ImageView> levelMap, Level level) {
-		this.levelMap = levelMap;
+	public Player(LevelController controller, Level level) {
+		this.playerBox = new ImageView(playerImg);
+		this.playerBox.setFitHeight(50);
+		this.playerBox.setFitWidth(50);
+		this.levelcontroller = controller;
+		this.levelMap = controller.getMap();
 		this.level = level;
 		this.currentX = 0;
 		this.currentY = 0;
 
-		spawnPlayer();
+	}
+
+	public Player() {
 	}
 
 	public void spawnPlayer() {
-		// spawn player outside level and translate over
-
-		this.playerBox = new ImageView(playerImg);
-		this.playerBox.setFitHeight(50);
-		this.playerBox.setFitWidth(50);
-
-		TranslateTransition translate = new TranslateTransition();
-		translate.setNode(this.playerBox);
-
-		translate.setByX((-17 + currentX) * 50);
-		translate.setByY((currentY) * 50);
-
-		translate.setDuration(Duration.millis(1));
-		translate.play();
+		this.levelMap.get(List.of(currentX, currentY)).setImage(playerImg);
+		this.levelMap.get(List.of(currentX, currentY)).setId("player");
 	}
 
 	public void dieEvent() {
 		this.playerBox.setImage(playerDeath1);
 
-		new java.util.Timer().schedule(new java.util.TimerTask() {
-			@Override
-			public void run() {
-				Platform.runLater(() -> {
-					die();
-				});
-			}
-		}, 800);
+		PauseTransition pause = new PauseTransition(Duration.millis(800));
+		pause.setOnFinished(event -> {
+			this.playerBox.setImage(playerDeath2);
+			die();
+		});
+		pause.play();
 	}
 
 	private void die() {
-		this.playerBox.setImage(playerDeath2);
-		level.playerDied();
+		this.levelMap.get(List.of(currentX, currentY)).setImage(null);
+		this.level.playerDied();
+		this.levelcontroller.stopEnemyTimeline();
 	}
 
-	public void movePlayer(int x, int y) {
-		TranslateTransition translate = new TranslateTransition();
-		translate.setNode(this.playerBox);
-
-		currentX += x;
-		currentY += y;
-
-		translate.setByX(x * 50);
-		translate.setByY(y * 50);
-		translate.setDuration(Duration.millis(1));
-		translate.play();
-
-		System.out.println("x: " + currentX + " y: " + currentY);
+	public void movePlayer(HashMap<List<Integer>, ImageView> levelMap, int x, int y) {
+		if (levelMap.get(List.of(currentX, currentY)).getImage().equals(this.playerImg)) {
+			levelMap.get(List.of(currentX, currentY)).setImage(null);
+			levelMap.get(List.of(currentX, currentY)).setId("");
+		}
+		levelMap.get(List.of(currentX + x, currentY + y)).setImage(playerImg);
+		levelMap.get(List.of(currentX + x, currentY + y)).setId("player");
+		this.currentX += x;
+		this.currentY += y;
 	}
 
 	public boolean isMoveValid(int deltaX, int deltaY) {
@@ -83,8 +75,13 @@ public class Player {
 			return false;
 		}
 
-		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getImage() == null ||
-				this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getId().equals("powerup");
+		return this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getId().equals("") ||
+				this.levelMap.get(List.of(currentX + deltaX, currentY + deltaY)).getId().equals("powerup");// ||
+																											// collisione
+																											// enemies
+																											// disabilitata
+		// this.levelMap.get(List.of(currentX + deltaX, currentY +
+		// deltaY)).getId().equals("enemy");
 	}
 
 	public ImageView getPlayerNode() {
@@ -100,18 +97,21 @@ public class Player {
 	}
 
 	public void damageAnimation() {
-		try {
-			this.playerBox.setImage(null);
-			Thread.sleep(50);
-			this.playerBox.setImage(playerImg);
-			Thread.sleep(50);
-			this.playerBox.setImage(null);
-			Thread.sleep(50);
-			this.playerBox.setImage(playerImg);
+		playerBox.setImage(playerDeath1);
 
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		// Cambio l'immagine a 'death2' dopo 100 millisecondi
+		Timeline deathAnimation = new Timeline();
+		deathAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(100), event -> {
+			playerBox.setImage(playerDeath2);
+		}));
+
+		// Rimuovo l'immagine dopo altri 100 millisecondi
+		deathAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), event -> {
+			this.playerBox.setImage(null);
+			this.playerBox.setId("");
+		}));
+
+		deathAnimation.play();
 	}
 
 	public Scene getScene() {
