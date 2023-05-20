@@ -15,8 +15,10 @@ public class Bomb {
 	private Integer destructedWalls = 0, x, y, expRadius;
 	private HashMap<List<Integer>, ImageView> map;
 	private AudioManager audio = new AudioManager();
-	private Image bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png")),
-			boom = new Image(getClass().getResourceAsStream("/resources/boom.png"));
+	private Image 	bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png")),
+					boom = new Image(getClass().getResourceAsStream("/resources/boom.png")),
+					walker =  new Image(getClass().getResourceAsStream("/resources/enemy2-static.png")),
+					bomber =  new Image(getClass().getResourceAsStream("/resources/enemy1-static.png"));
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.map = level.getMap();
@@ -131,6 +133,20 @@ public class Bomb {
 	}
 
 	private void clear(List<ImageView> nearTiles) {
+		this.lvl.getEnemies().stream().forEach((e)->{
+			if(e.currentX == this.x && e.currentY == this.y){
+
+				if(e.enemyType.equals("walker")){
+					map.get(List.of(x, y)).setImage(this.walker);
+				}else{
+					map.get(List.of(x, y)).setImage(this.bomber);
+				}
+
+				map.get(List.of(x, y)).setId("enemy");
+			}
+		});
+
+
 		for (ImageView tile : nearTiles) {
 			if (tile.getImage() != null && tile.getImage().equals(boom)) {
 				tile.setImage(null);
