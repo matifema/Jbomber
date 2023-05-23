@@ -328,6 +328,10 @@ public class LevelController {
 		this.player = player;
 	}
 
+	public Player getPlayer(){
+		return this.player;
+	}
+
 	public void setStage(Stage stage) {
 		this.mainStage = stage;
 	}

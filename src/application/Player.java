@@ -17,7 +17,7 @@ public class Player {
 	private ImageView playerBox;
 	public Integer currentX, currentY;
 	private HashMap<List<Integer>, ImageView> levelMap;
-	private Image playerImg = new Image(getClass().getResourceAsStream("/resources/gabboplayer.png")),
+	private Image playerImg = new Image(getClass().getResourceAsStream("/resources/player-static.png")),
 			playerDeath1 = new Image(getClass().getResourceAsStream("/resources/player-death-1.png")),
 			playerDeath2 = new Image(getClass().getResourceAsStream("/resources/player-death-2.png"));
 	private LevelController levelcontroller;

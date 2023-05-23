@@ -53,15 +53,14 @@ public class NewGameController {
 
                 write.setData(List.of(nameField.getText(), "0", "0", "0", "0", this.avatar));
 
+                System.out.println(this.avatar);
+                
                 try {
                     new Level(this.mainStage);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            if (event.getCode() == KeyCode.ESCAPE) {
-                // TODO back to menu
             }
         });
 

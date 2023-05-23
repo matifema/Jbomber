@@ -18,7 +18,9 @@ public class Bomb {
 	private Image 	bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png")),
 					boom = new Image(getClass().getResourceAsStream("/resources/boom.png")),
 					walker =  new Image(getClass().getResourceAsStream("/resources/enemy2-static.png")),
-					bomber =  new Image(getClass().getResourceAsStream("/resources/enemy1-static.png"));
+					bomber =  new Image(getClass().getResourceAsStream("/resources/enemy1-static.png")),
+					player =  new Image(getClass().getResourceAsStream("/resources/player-static.png"));
+
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.map = level.getMap();
@@ -144,8 +146,15 @@ public class Bomb {
 
 				map.get(List.of(x, y)).setId("enemy");
 			}
-		});
 
+		});
+		
+		if(	this.lvl.getPlayer().currentX == this.x 
+			&& this.lvl.getPlayer().currentY == this.y){
+
+			map.get(List.of(x, y)).setImage(this.player);
+			map.get(List.of(x, y)).setId("player");
+		}
 
 		for (ImageView tile : nearTiles) {
 			if (tile.getImage() != null && tile.getImage().equals(boom)) {
