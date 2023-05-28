@@ -146,7 +146,6 @@ public class Bomb {
 
 				map.get(List.of(x, y)).setId("enemy");
 			}
-
 		});
 		
 		if(	this.lvl.getPlayer().currentX == this.x 
