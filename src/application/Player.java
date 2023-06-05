@@ -60,7 +60,7 @@ public class Player {
 	}
 
 	public void movePlayer(HashMap<List<Integer>, ImageView> levelMap, int x, int y) {
-		if (levelMap.get(List.of(currentX, currentY)).getImage().equals(this.playerImg)) {
+		if (levelMap.get(List.of(currentX, currentY)).getId().equals("player")) {
 			levelMap.get(List.of(currentX, currentY)).setImage(null);
 			levelMap.get(List.of(currentX, currentY)).setId("");
 		}

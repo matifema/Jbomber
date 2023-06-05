@@ -316,12 +316,12 @@ public class LevelController {
 		return this.tilePane;
 	}
 
-	public void setEnemies(LinkedList<Enemy> enemies) {
-		for (Enemy e : enemies) {
+	public void setEnemies(List<Enemy> enemies2) {
+		for (Enemy e : enemies2) {
 			renderEntity(e);
 		}
 
-		this.enemies.addAll(enemies);
+		this.enemies.addAll(enemies2);
 	}
 
 	public void renderPla(Player player) {

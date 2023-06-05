@@ -1,7 +1,8 @@
 package application;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 import controllers.LevelController;
 import javafx.fxml.FXMLLoader;
@@ -61,7 +62,7 @@ public class Level {
 		Enemy walker = new Enemy(controller, "walker");
 		Enemy bomber = new Enemy(controller, "bomber");
 
-		LinkedList<Enemy> enemies = new LinkedList<Enemy>();
+		List<Enemy> enemies = new ArrayList<>();
 
 		enemies.add(walker);
 		enemies.add(bomber);
