@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import controllers.LevelController;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Bomb {
@@ -15,12 +14,6 @@ public class Bomb {
 	private Integer destructedWalls = 0, x, y, expRadius;
 	private HashMap<List<Integer>, ImageView> map;
 	private AudioManager audio = new AudioManager();
-	private Image 	bomb = new Image(getClass().getResourceAsStream("/resources/bomb.png")),
-					boom = new Image(getClass().getResourceAsStream("/resources/boom.png")),
-					walker =  new Image(getClass().getResourceAsStream("/resources/enemy2-static.png")),
-					bomber =  new Image(getClass().getResourceAsStream("/resources/enemy1-static.png")),
-					player =  new Image(getClass().getResourceAsStream("/resources/player-static.png"));
-
 
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.map = level.getMap();
@@ -31,7 +24,7 @@ public class Bomb {
 		this.y = placedY;
 
 		// place bomb
-		map.get(List.of(x, y)).setImage(this.bomb);
+		map.get(List.of(x, y)).setImage(Level.bomb);
 		map.get(List.of(x, y)).setId("bomb");
 		startCountDown();
 		isExploded = false;
@@ -55,17 +48,19 @@ public class Bomb {
 
 	private void explosion(List<ImageView> nearTiles) {
 
-		this.lvl.getMap().get(List.of(this.x, this.y)).setImage(boom);
+		HashMap<List<Integer>, ImageView> map = this.lvl.getMap();
+
+		map.get(List.of(this.x, this.y)).setImage(Level.boom);
 
 		for (ImageView tile : nearTiles) {
 			int tileX = (int) (tile.getLayoutX() / 50), tileY = (int) (tile.getLayoutY() / 50);
 
 			if (tile.getId().equals("")) {
-				this.lvl.getMap().get(List.of(tileX, tileY)).setImage(boom);
+				map.get(List.of(tileX, tileY)).setImage(Level.boom);
 			}
 
 			if (tile.getId().equals("wall")) {
-				this.lvl.getMap().get(List.of(tileX, tileY)).setImage(boom);
+				map.get(List.of(tileX, tileY)).setImage(Level.boom);
 
 				if (this.placedBy.equals("player")) {
 					spawnPowerUp(tile);
@@ -82,12 +77,10 @@ public class Bomb {
 
 			if (tile.getId().equals("player")) {
 				this.gameEnded = this.lvl.checkPlayerDamage(tileX, tileY);
-
 				if (this.gameEnded) {
 					break;
 				}
 			}
-
 		}
 
 		if (!gameEnded) {
@@ -139,24 +132,27 @@ public class Bomb {
 			if(e.currentX == this.x && e.currentY == this.y){
 
 				if(e.enemyType.equals("walker")){
-					map.get(List.of(x, y)).setImage(this.walker);
+					map.get(List.of(x, y)).setImage(Level.walker);
 				}else{
-					map.get(List.of(x, y)).setImage(this.bomber);
+					map.get(List.of(x, y)).setImage(Level.bomber);
 				}
 
 				map.get(List.of(x, y)).setId("enemy");
 			}
 		});
-		
+
 		if(	this.lvl.getPlayer().currentX == this.x 
 			&& this.lvl.getPlayer().currentY == this.y){
+			
+			this.lvl.checkPlayerDamage(this.x, this.y);
 
-			map.get(List.of(x, y)).setImage(this.player);
+			map.get(List.of(x, y)).setImage(Level.playerImg);
 			map.get(List.of(x, y)).setId("player");
 		}
 
 		for (ImageView tile : nearTiles) {
-			if (tile.getImage() != null && tile.getImage().equals(boom)) {
+			// not null necessario
+			if (tile.getImage() != null && tile.getImage().equals(Level.boom)) {
 				tile.setImage(null);
 				tile.setId("");
 			}

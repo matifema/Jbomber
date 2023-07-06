@@ -4,48 +4,48 @@ import java.io.File;
 
 import javafx.scene.media.AudioClip;
 
+/**
+ * Classe che gestisce audio
+ */
 public class AudioManager {
-	private String soundTrackPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/soundtrack.mp3",
-			gameStartPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/game-start.mp3",
-			boomPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/boom.mp3",
-			selectPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/select.mp3",
-			gameOverPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/game-over.wav",
-			damageTakenPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/damage-taken.mp3";
+	private static String systemPath = "/home/a/eclipse-workspace/Jbomber/src/resources/audio/"; 
+	private static String soundTrackP = "soundtrack.mp3", gameStartP = "game-start.mp3", boomP = "boom.mp3", selectP = "select.mp3", gameOverP = "game-over.wav", damageTakenP = "damage-taken.mp3";
+	private static AudioClip soundTrack = new AudioClip(new File(systemPath+soundTrackP).toURI().toString()),
+						gameOver = new AudioClip(new File(systemPath+gameOverP).toURI().toString()),
+						damageTaken = new AudioClip(new File(systemPath+damageTakenP).toURI().toString()),
+						gameStart = new AudioClip(new File(systemPath+gameStartP).toURI().toString()),
+						boom = new AudioClip(new File(systemPath+boomP).toURI().toString()),
+						select = new AudioClip(new File(systemPath+selectP).toURI().toString());
 
 	public AudioManager() {
+
 	}
 
-	public void playSoundtrack(boolean playing) {
-		AudioClip soundTrack = new AudioClip(new File(soundTrackPath).toURI().toString());
-		soundTrack.play();
-
-		if (!playing) {
+	public void playSoundtrack(boolean play) {
+		if (play) {
+			soundTrack.play();
+		}else{
 			soundTrack.stop();
 		}
 	}
 
 	public void playGameOver() {
-		AudioClip gameOver = new AudioClip(new File(gameOverPath).toURI().toString());
 		gameOver.play();
 	}
 
 	public void playDamageTaken() {
-		AudioClip damageTaken = new AudioClip(new File(damageTakenPath).toURI().toString());
 		damageTaken.play();
 	}
 
 	public void playGameStart() {
-		AudioClip gameStart = new AudioClip(new File(gameStartPath).toURI().toString());
 		gameStart.play();
 	}
 
 	public void playBoom() {
-		AudioClip boom = new AudioClip(new File(boomPath).toURI().toString());
 		boom.play();
 	}
 
 	public void playSelect() {
-		AudioClip select = new AudioClip(new File(selectPath).toURI().toString());
 		select.play();
 	}
 

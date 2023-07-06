@@ -59,7 +59,7 @@ public class MenuController {
 
 	public void select(Stage mainStage) throws IOException {
 		switch (selected) {
-			case 1:
+			case 1: // new game
 				if (!isDataSaved()) {
 					new Level(mainStage);
 				} else {
@@ -67,7 +67,7 @@ public class MenuController {
 				}
 				break;
 
-			case 2:
+			case 2: // stats
 				if (!isDataSaved()) {
 					new Stats(mainStage);
 				} else {

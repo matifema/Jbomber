@@ -1,19 +1,30 @@
 package application;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import controllers.LevelController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 public class Level {
 	private Scene scene;
 	private Stage mainStage;
+	private static String sysPath = "file:/home/a/eclipse-workspace/Jbomber/src/resources/";
+	public static Image grass = new Image(sysPath+"grass.png", 50, 50, false, true),
+						border = new Image(sysPath+"barrier.png", 50, 50, false, true),
+						wall = new Image(sysPath+"wall.png", 50, 50, false, true),
+	 					bomb = new Image(sysPath+"bomb.png", 50, 50, false, true),
+						boom = new Image(sysPath+"boom.png", 50, 50, false, true),
+						walker = new Image(sysPath+"enemy2-static.png", 50, 50, false, true),
+						bomber = new Image(sysPath+"enemy1-static.png", 50, 50, false, true),
+						playerImg = new Image(sysPath+"player-static.png", 50, 50, false, true),
+						playerDeath1 = new Image(sysPath+"player-death-1.png", 50, 50, false, true),
+						playerDeath2 = new Image(sysPath+"player-death-2.png", 50, 50, false, true);
 
 	public Level(Stage stage) throws IOException {
 		this.mainStage = stage;
@@ -62,7 +73,7 @@ public class Level {
 		Enemy walker = new Enemy(controller, "walker");
 		Enemy bomber = new Enemy(controller, "bomber");
 
-		List<Enemy> enemies = new ArrayList<>();
+		LinkedList<Enemy> enemies = new LinkedList<Enemy>();
 
 		enemies.add(walker);
 		enemies.add(bomber);

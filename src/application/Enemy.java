@@ -67,6 +67,7 @@ public class Enemy {
 
 	public void placeBomb() {
 		this.levelController.placeBomb("enemy", this.currentX, this.currentY);
+		this.moveEnemy(this.levelController.getMap());
 	}
 
 	public boolean isMoveValid(int deltaX, int deltaY, HashMap<List<Integer>, ImageView> levelMap) {
@@ -90,7 +91,7 @@ public class Enemy {
 
 		// Create a Timeline to move the enemies randomly
 		this.enemyMovementTimeline = new Timeline(new KeyFrame(Duration.millis(1000), event -> {
-			moveEnemy(levelMap);
+			moveEnemy(levelController.getMap());
 			levelController.checkPlayerDamage(currentX, currentY);
 
 		}));
@@ -152,14 +153,14 @@ public class Enemy {
 	}
 
 	public void stopBehaviour() {
-		try {
-			System.out.println("-- enemy timelines stopped");
+		
+		this.enemyMovementTimeline.stop();
 
-			this.enemyMovementTimeline.stop();
+		if(this.enemyType.equals("bomber")){
 			this.enemyBombsTimeline.stop();
-		} catch (Exception e) {
-			System.out.println("-- enemy (walker exception) timelines stopped");
 		}
+
+		System.out.println("-- enemy timelines stopped");
 	}
 
 }

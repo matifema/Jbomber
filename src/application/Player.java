@@ -4,11 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import controllers.LevelController;
-import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
@@ -17,13 +14,10 @@ public class Player {
 	private ImageView playerBox;
 	public Integer currentX, currentY;
 	private HashMap<List<Integer>, ImageView> levelMap;
-	private Image playerImg = new Image(getClass().getResourceAsStream("/resources/player-static.png")),
-			playerDeath1 = new Image(getClass().getResourceAsStream("/resources/player-death-1.png")),
-			playerDeath2 = new Image(getClass().getResourceAsStream("/resources/player-death-2.png"));
 	private LevelController levelcontroller;
 
 	public Player(LevelController controller, Level level) {
-		this.playerBox = new ImageView(playerImg);
+		this.playerBox = new ImageView(Level.playerImg);
 		this.playerBox.setFitHeight(50);
 		this.playerBox.setFitWidth(50);
 		this.levelcontroller = controller;
@@ -38,16 +32,16 @@ public class Player {
 	}
 
 	public void spawnPlayer() {
-		this.levelMap.get(List.of(currentX, currentY)).setImage(playerImg);
+		this.levelMap.get(List.of(currentX, currentY)).setImage(Level.playerImg);
 		this.levelMap.get(List.of(currentX, currentY)).setId("player");
 	}
 
 	public void dieEvent() {
-		this.playerBox.setImage(playerDeath1);
+		this.playerBox.setImage(Level.playerDeath1);
 
-		PauseTransition pause = new PauseTransition(Duration.millis(800));
+		PauseTransition pause = new PauseTransition(Duration.millis(700));
 		pause.setOnFinished(event -> {
-			this.playerBox.setImage(playerDeath2);
+			this.playerBox.setImage(Level.playerDeath2);
 			die();
 		});
 		pause.play();
@@ -60,15 +54,24 @@ public class Player {
 	}
 
 	public void movePlayer(HashMap<List<Integer>, ImageView> levelMap, int x, int y) {
-		if (levelMap.get(List.of(currentX, currentY)).getId().equals("player")) {
-			levelMap.get(List.of(currentX, currentY)).setImage(null);
-			levelMap.get(List.of(currentX, currentY)).setId("");
-		}
-		levelMap.get(List.of(currentX + x, currentY + y)).setImage(playerImg);
-		levelMap.get(List.of(currentX + x, currentY + y)).setId("player");
+		int oldX = this.currentX;
+		int oldY = this.currentY;
 		this.currentX += x;
 		this.currentY += y;
+	
+		// cancella vecchia posizione player
+		if (levelMap.get(List.of(oldX, oldY)).getImage().equals(Level.playerImg) ||
+			levelMap.get(List.of(oldX, oldY)).getId().equals("player")) {
+			
+			levelMap.get(List.of(oldX, oldY)).setImage(null);
+			levelMap.get(List.of(oldX, oldY)).setId("");
+		}
+	
+		// piazza player a nuova posizione
+		levelMap.get(List.of(currentX, currentY)).setImage(Level.playerImg);
+		levelMap.get(List.of(currentX, currentY)).setId("player");
 	}
+	
 
 	public boolean isMoveValid(int deltaX, int deltaY) {
 		if (currentX + deltaX > 17 || currentY + deltaY > 16 || currentX + deltaX < 0 || currentY + deltaY < 0) {
@@ -94,24 +97,6 @@ public class Player {
 
 	public int getY() {
 		return this.currentY;
-	}
-
-	public void damageAnimation() {
-		playerBox.setImage(playerDeath1);
-
-		// Cambio l'immagine a 'death2' dopo 100 millisecondi
-		Timeline deathAnimation = new Timeline();
-		deathAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(100), event -> {
-			playerBox.setImage(playerDeath2);
-		}));
-
-		// Rimuovo l'immagine dopo altri 100 millisecondi
-		deathAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(200), event -> {
-			this.playerBox.setImage(null);
-			this.playerBox.setId("");
-		}));
-
-		deathAnimation.play();
 	}
 
 	public Scene getScene() {
