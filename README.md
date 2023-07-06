@@ -26,10 +26,8 @@
 - Enemies have random movement patterns and will also place bombs to attack the player.
 
 ## Controls
-
-- Menu: Arrow keys (Up, Down, Left, Right), Enter
 - Movement: W,A,S,D
-- Place Bomb: SpaceBar
+- Place Bomb / Enter: SpaceBar
 - Pause: Esc
 
 ## Screenshots
