@@ -40,7 +40,7 @@ public class LevelController {
 	@FXML
 	TilePane tilePane;
 
-	private final int nCols = 17, nRows = 16, nWalls = 50;
+	private final int nCols = 17, nRows = 17, nWalls = 60;
 	private Integer scorePoints = 0, explosionPower = 1, livesScore = 3;
 	private Player player = new Player();
 	private Bomb placedBomb;
@@ -88,12 +88,12 @@ public class LevelController {
 
 		for (int y = 0; y < nRows; y++) {
 			for (int x = 0; x < nCols; x++) {
-				if (x == 0 || x == nCols - 1 || y == nRows - 1) {
+				if (x == 0 || y == 0|| x == nCols - 1 || y == nRows - 1) {
 					map.get(List.of(x, y)).setImage(Level.border);
 					map.get(List.of(x, y)).setId("border");
 					map.get(List.of(x, y)).setEffect(ca);
 				} else {
-					if (x % 2 == 0 && y % 2 != 0) {
+					if (x % 2 == 0 && y % 2 == 0) {
 						map.get(List.of(x, y)).setImage(Level.border);
 						map.get(List.of(x, y)).setId("border");
 						map.get(List.of(x, y)).setEffect(ca);
