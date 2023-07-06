@@ -2,12 +2,15 @@ package controllers;
 
 import java.util.List;
 
-import application.save.ReadFromFile;
+import application.save.GameData;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+/**
+ * Controller for Stats class.
+ */
 public class StatsController {
     @FXML
     Text name;
@@ -22,13 +25,18 @@ public class StatsController {
     @FXML
     Text playedGames;
 
-    public StatsController() {
-    }
+    /**
+     * Creates new instance of StatsController
+     */
+    public StatsController() {}
 
+    /**
+     * Loads data from gamedata and displays it on screen.
+     */
     public void loadData() {
         System.out.println("-- loading data from savefile");
 
-        ReadFromFile read = new ReadFromFile();
+        GameData read = new GameData();
         List<String> data = read.getData();
 
         this.name.setText(data.get(0));
@@ -43,8 +51,12 @@ public class StatsController {
         }
     }
 
+    /**
+     * Writes data to disk.
+     * @param data
+     */
     public void writeData(List<String> data) {
-        ReadFromFile read = new ReadFromFile();
+        GameData read = new GameData();
         read.setData(data);
         return;
     }

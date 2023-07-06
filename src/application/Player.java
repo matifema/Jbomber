@@ -5,10 +5,12 @@ import java.util.List;
 
 import controllers.LevelController;
 import javafx.animation.PauseTransition;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+/**
+ * Player Object Class.
+ */
 public class Player {
 	private Level level;
 	private ImageView playerBox;
@@ -16,6 +18,12 @@ public class Player {
 	private HashMap<List<Integer>, ImageView> levelMap;
 	private LevelController levelcontroller;
 
+	/**
+	 * Creates new instance of a Player.
+	 * Loads img, map and position.
+	 * @param controller
+	 * @param level
+	 */
 	public Player(LevelController controller, Level level) {
 		this.playerBox = new ImageView(Level.playerImg);
 		this.playerBox.setFitHeight(50);
@@ -28,14 +36,18 @@ public class Player {
 
 	}
 
-	public Player() {
-	}
-
+	/**
+	 * Spawns player in map @ currentX, currentY position
+	 */
 	public void spawnPlayer() {
 		this.levelMap.get(List.of(currentX, currentY)).setImage(Level.playerImg);
 		this.levelMap.get(List.of(currentX, currentY)).setId("player");
 	}
 
+	/**
+	 * Die Event.
+	 * Plays little 2 frame animation.
+	 */
 	public void dieEvent() {
 		this.playerBox.setImage(Level.playerDeath1);
 
@@ -47,19 +59,32 @@ public class Player {
 		pause.play();
 	}
 
+	/**
+	 * Called by dieEvent.
+	 * Removes player from map,
+	 * Informs the level of the death of the player,
+	 * Stops enemy timelines.
+	 */
 	private void die() {
 		this.levelMap.get(List.of(currentX, currentY)).setImage(null);
 		this.level.playerDied();
 		this.levelcontroller.stopEnemyTimeline();
 	}
 
+	/**
+	 * Moves the player to the selected cardinal tile.
+	 * Removes old player img from position in map and replaces it with new one.
+	 * @param levelMap
+	 * @param x <- delta X
+	 * @param y	<- delta Y
+	 */
 	public void movePlayer(HashMap<List<Integer>, ImageView> levelMap, int x, int y) {
 		int oldX = this.currentX;
 		int oldY = this.currentY;
 		this.currentX += x;
 		this.currentY += y;
 	
-		// cancella vecchia posizione player
+		// removes old player pos
 		if (levelMap.get(List.of(oldX, oldY)).getImage().equals(Level.playerImg) ||
 			levelMap.get(List.of(oldX, oldY)).getId().equals("player")) {
 			
@@ -67,12 +92,20 @@ public class Player {
 			levelMap.get(List.of(oldX, oldY)).setId("");
 		}
 	
-		// piazza player a nuova posizione
+		// updates player pos
 		levelMap.get(List.of(currentX, currentY)).setImage(Level.playerImg);
 		levelMap.get(List.of(currentX, currentY)).setId("player");
 	}
 	
-
+	/**
+	 * Returns true if move is valid.
+	 * Checks if the tile we want to move to:
+	 * 	- is within the map border.
+	 * 	- is free or has a powerup to pick up.
+	 * @param deltaX
+	 * @param deltaY
+	 * @return
+	 */
 	public boolean isMoveValid(int deltaX, int deltaY) {
 		if (currentX + deltaX > 17 || currentY + deltaY > 16 || currentX + deltaX < 0 || currentY + deltaY < 0) {
 			return false;
@@ -87,20 +120,28 @@ public class Player {
 		// deltaY)).getId().equals("enemy");
 	}
 
+	/**
+	 * Returns player's ImageView
+	 * @return
+	 */
 	public ImageView getPlayerNode() {
 		return this.playerBox;
 	}
 
+	/**
+	 * Returns player's current X
+	 * @return
+	 */
 	public int getX() {
 		return this.currentX;
 	}
 
+	/**
+	 * Returns player's current Y
+	 * @return
+	 */
 	public int getY() {
 		return this.currentY;
-	}
-
-	public Scene getScene() {
-		return null;
 	}
 
 }

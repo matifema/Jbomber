@@ -7,18 +7,27 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
 
+/**
+ * Screen Stats.
+ */
 public class Stats {
 	private Scene scene;
 
-	public Stats(Stage mainStage) throws IOException {
+	/**
+	 * Creates new Screen for statistics.
+	 * Loads from fxml, 
+	 * loads gamstate from file,
+	 * starts key handler for scene.
+	 * @throws IOException
+	 */
+	public Stats() throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/resources/view/Stats.fxml"));
 		Parent root = fxmlLoader.load();
 		StatsController controller = fxmlLoader.getController();
 
 		this.scene = new Scene(root);
-		mainStage.setScene(scene);
+		JBomberMan.stage.setScene(scene);
 
 		controller.loadData();
 
@@ -28,7 +37,7 @@ public class Stats {
 			if (event.getCode() == KeyCode.ESCAPE) {
 				audio.playSelect();
 				try {
-					new MainMenu(mainStage);
+					new MainMenu();
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -39,7 +48,4 @@ public class Stats {
 
 	}
 
-	public Scene getScene() {
-		return this.scene;
-	}
 }

@@ -4,15 +4,17 @@ import java.io.IOException;
 import java.util.List;
 
 import application.Level;
-import application.save.ReadFromFile;
+import application.save.GameData;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
 
+/**
+ * Controller for NewGame Screen.
+ */
 public class NewGameController {
     @FXML
     TextField nameField;
@@ -25,11 +27,16 @@ public class NewGameController {
 
     private String avatar = "";
     private ToggleGroup toggleGroup = new ToggleGroup();
-    private Stage mainStage;
 
-    public NewGameController() {
-    }
+    /**
+     * Creates new instance of NewGameController.
+     */
+    public NewGameController() {}
 
+    /**
+     * Starts key handler on the current scene.
+     * @param scene
+     */
     public void startKeyHandler(Scene scene) {
         btn1.setToggleGroup(toggleGroup);
         btn2.setToggleGroup(toggleGroup);
@@ -37,7 +44,7 @@ public class NewGameController {
 
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.E) {
-                ReadFromFile write = new ReadFromFile();
+                GameData write = new GameData();
 
                 if (btn1.isSelected()) {
                     this.avatar = "avatar1.png";
@@ -56,7 +63,7 @@ public class NewGameController {
                 System.out.println(this.avatar);
                 
                 try {
-                    new Level(this.mainStage);
+                    new Level();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -64,10 +71,6 @@ public class NewGameController {
             }
         });
 
-    }
-
-    public void setStage(Stage stage) {
-        this.mainStage = stage;
     }
 
 }

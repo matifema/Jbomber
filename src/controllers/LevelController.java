@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 import application.AudioManager;
 import application.Bomb;
@@ -18,7 +17,7 @@ import application.Enemy;
 import application.Level;
 import application.Player;
 import application.PowerUp;
-import application.save.ReadFromFile;
+import application.save.GameData;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.effect.ColorAdjust;
@@ -30,8 +29,10 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
+/**
+ * Controller for Level class.
+ */
 public class LevelController {
 	@FXML
 	Text score;
@@ -41,19 +42,26 @@ public class LevelController {
 	TilePane tilePane;
 
 	private final int nCols = 17, nRows = 17, nWalls = 60;
-	private Integer scorePoints = 0, explosionPower = 1, livesScore = 3;
-	private Player player = new Player();
+	private static Integer scorePoints = 0, explosionPower = 1, livesScore = 3;
+	private Player player;
 	private Bomb placedBomb;
 	private AudioManager audio = new AudioManager();
 	private HashMap<List<Integer>, ImageView> map = new HashMap<>();
 	private LinkedList<Enemy> enemies = new LinkedList<Enemy>();
 	public List<PowerUp> powerUps = new ArrayList<>();
-	private Stage mainStage;
 
+	/**
+	 * Creates new instance of LevelController.
+	 * Starts the soundtrack.
+	 */
 	public LevelController() {
 		this.audio.playSoundtrack(true);
 	}
 
+	/**
+	 * Creates a single tile (ImageView) for the map.
+	 * @return
+	 */
 	public ImageView createTile() {
 		ImageView tile = new ImageView();
 
@@ -63,11 +71,17 @@ public class LevelController {
 		return tile;
 	}
 
+	/**
+	 * Populates the screen (TilePane) with tiles, sets the background.
+	 * Also creates a Map<List<Integer>, Imageview>.
+	 * The Keys are the coordiates on screen.
+	 * The Values are the ImageView (or tiles).
+	 */
 	public void populateSpace() {
-		BackgroundImage myBI = new BackgroundImage(Level.grass, BackgroundRepeat.REPEAT, null, BackgroundPosition.DEFAULT,
+		BackgroundImage myBg = new BackgroundImage(Level.grass, BackgroundRepeat.REPEAT, null, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
 
-		tilePane.setBackground(new Background(myBI));
+		tilePane.setBackground(new Background(myBg));
 
 		for (int x = 0; x < nCols; x++) {
 			for (int y = 0; y < nRows; y++) {
@@ -81,6 +95,9 @@ public class LevelController {
 		}
 	}
 
+	/**
+	 * Renders the undestructible border around and inside the level.
+	 */
 	public void renderBorder() {
 		ColorAdjust ca = new ColorAdjust();
 		ca.setHue(new Random().nextDouble(-1, 1));
@@ -103,6 +120,9 @@ public class LevelController {
 		}
 	}
 
+	/**
+	 * Renders the destructible walls inside the level.
+	 */
 	public void renderWalls() {
 		ColorAdjust ca = new ColorAdjust();
 		ca.setHue(new Random().nextDouble(-1, 1));
@@ -123,6 +143,11 @@ public class LevelController {
 		}
 	}
 
+	/**
+	 * Renders a general entity (enemy/player).
+	 * Finds an empty spot randomly and spawns the entity.
+	 * @param entity
+	 */
 	public void renderEntity(Object entity) {
 		Random rand = new Random();
 		int x, y;
@@ -132,7 +157,7 @@ public class LevelController {
 			y = rand.nextInt(0, nRows - 2);
 		} while ((map.get(List.of(x, y)).getImage() != null));
 
-		if (entity.getClass().equals(this.player.getClass())) { // render player
+		if (entity instanceof Player) { // render player
 			this.player = (Player) entity;
 
 			this.player.currentX = x;
@@ -154,29 +179,26 @@ public class LevelController {
 		}
 	}
 
-	public void clearLevel() {
-		IntStream.range(0, nRows)
-				.forEach(y -> IntStream.range(0, nCols)
-						.filter(x -> map.get(List.of(x, y)).getImage() != Level.wall)
-						.forEach(x -> {
-							ImageView tile = map.get(List.of(x, y));
-							tile.setImage(null);
-							tile.setId("");
-						}));
-
-		// 306 perche il player è aggiunto per ultimo, ovvero 17*18-1
-		tilePane.getChildren().remove(306);
-	}
-
+	/**
+	 * Places a bomb on the map given the coordinates.
+	 * @param placedBy
+	 * @param x
+	 * @param y
+	 */
 	public void placeBomb(String placedBy, int x, int y) {
 		if (placedBy.equals("player") && (this.placedBomb == null || this.placedBomb.isExploded)) {
-			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY(), placedBy, this.explosionPower);
+			this.placedBomb = new Bomb(this, this.player.getX(), this.player.getY(), placedBy, LevelController.explosionPower);
 		}
 		if (placedBy.equals("enemy")) {
-			new Bomb(this, x, y, placedBy, 2);
+			new Bomb(this, x, y, placedBy, 2 + Level.levelNum/2);
 		}
 	}
 
+	/**
+	 * Moves player by x and y.
+	 * @param x
+	 * @param y
+	 */
 	public void movePlayer(int x, int y) {
 		if (this.player.isMoveValid(x, y)) {
 			this.player.movePlayer(this.getMap(), x, y);
@@ -187,6 +209,10 @@ public class LevelController {
 		}
 	}
 
+	/**
+	 * Checks if the player can collect powerups.
+	 * @return
+	 */
 	private boolean checkEntities() {
 		this.powerUps.stream()
 				.filter(p -> this.player.currentX == p.x && this.player.currentY == p.y)
@@ -201,15 +227,21 @@ public class LevelController {
 		return false;
 	}
 
+	/**
+	 * Checks if a player is on the given x and y, and if true the player takes damage.
+	 * @param x
+	 * @param y
+	 * Returns true if game has ended (player has no more lives)
+	 * @return
+	 */
 	public boolean checkPlayerDamage(double x, double y) {
 		if (this.player.getX() == x && this.player.getY() == y) {
 			if (Integer.parseInt(this.lives.getText()) <= 1) {
 				this.player.dieEvent();
 				this.audio.playGameOver();
 				this.audio.playSoundtrack(false);
-				addLives(-1);
 
-				ReadFromFile save = new ReadFromFile(); // record in stats
+				GameData save = new GameData(); // record in stats
 				save.lostGame();
 
 				return true;
@@ -223,6 +255,13 @@ public class LevelController {
 		return false;
 	}
 
+	/**
+	 * Checks if an enemy is on the given x and y, and if true it takes damage.
+	 * @param x
+	 * @param y
+	 * Returns true if game has ended (there are no more enemies)
+	 * @return
+	 */
 	public boolean checkEnemyDamage(double x, double y) {
 		List<Enemy> temp = new ArrayList<>();
 
@@ -243,12 +282,12 @@ public class LevelController {
 			this.audio.playSoundtrack(false);
 			this.audio.playGameStart();
 
-			ReadFromFile saveFile = new ReadFromFile();
+			GameData saveFile = new GameData();
 			saveFile.wonGame();
 
 			Platform.runLater(() -> { // per thread del timer
 				try {
-					new EndScreen(this.mainStage, "LEVEL\nCOMPLETE");
+					new EndScreen("LEVEL\nCOMPLETE");
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -258,6 +297,14 @@ public class LevelController {
 		return false;
 	}
 
+	/**
+	 * Given the coordinates (x,y), this method looks up in the map in all cardinal directions (for a certain radius or until it finds a border tile) 
+	 * and returns a list of all the tiles that has encountered.
+	 * @param x
+	 * @param y
+	 * @param radius
+	 * @return
+	 */
 	public List<ImageView> getNearTiles(int x, int y, int radius) {
 		int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 		List<ImageView> nearWalls = new LinkedList<>();
@@ -287,28 +334,44 @@ public class LevelController {
 		return nearWalls;
 	}
 
+	/**
+	 * Adds points to the current score.
+	 * @param points
+	 */
 	public void addScore(int points) {
-		this.scorePoints += points;
+		LevelController.scorePoints += points;
 		this.score.setText("" + scorePoints);
 	}
 
+	/**
+	 * Adds i lives to the current lives.
+	 * @param i
+	 */
 	public void addLives(int i) {
-		this.livesScore = Integer.parseInt(this.lives.getText()) + i;
-		this.lives.setText("" + this.livesScore);
+		LevelController.livesScore = Integer.parseInt(this.lives.getText()) + i;
+		this.lives.setText("" + LevelController.livesScore);
 	}
 
+	/**
+	 * Adds i power to the current explosion power.
+	 * @param i
+	 */
 	public void addExpPower(int i) {
-		this.explosionPower += i;
+		LevelController.explosionPower += i;
 	}
 
+	/**
+	 * Returns the map.
+	 * @return
+	 */
 	public HashMap<List<Integer>, ImageView> getMap() {
 		return this.map;
 	}
 
-	public TilePane getTilePane() {
-		return this.tilePane;
-	}
-
+	/**
+	 * Sets and renders the enemies.
+	 * @param enemies
+	 */
 	public void setEnemies(LinkedList<Enemy> enemies) {
 		for (Enemy e : enemies) {
 			renderEntity(e);
@@ -317,22 +380,25 @@ public class LevelController {
 		this.enemies.addAll(enemies);
 	}
 
-	public void renderPla(Player player) {
-		this.player = player;
-	}
-
+	/**
+	 * Returns the player object.
+	 * @return
+	 */
 	public Player getPlayer() {
 		return this.player;
 	}
 
-	public void setStage(Stage stage) {
-		this.mainStage = stage;
-	}
-
-	public LinkedList<Enemy> getEnemies() {
+	/**
+	 * Returns the list of enemies
+	 * @return
+	 */
+	public List<Enemy> getEnemies() {
 		return this.enemies;
 	}
 
+	/**
+	 * Stops the enemies and their timeline.
+	 */
 	public void stopEnemyTimeline() {
 		for (Enemy e : this.enemies) {
 			e.die();
@@ -340,5 +406,4 @@ public class LevelController {
 		this.enemies.removeAll(this.enemies);
 
 	}
-
 }

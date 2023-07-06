@@ -5,12 +5,15 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class JBomberMan extends Application {
+	public static Stage stage;
+
 	@Override
 	public void start(Stage stage) throws IOException {
-
-		new MainMenu(stage);
-
+		JBomberMan.stage = stage;
+		
+		new MainMenu();
+		
 		stage.setTitle("JBomber");
 		stage.sizeToScene();
 		stage.setMaxWidth(850);
@@ -18,6 +21,6 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		launch(); // lancia la finestra
+		launch(); // starts game
 	}
 }

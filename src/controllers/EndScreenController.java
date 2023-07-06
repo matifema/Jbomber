@@ -7,8 +7,10 @@ import application.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
+/**
+ * Controller Class for EndScreen.
+ */
 public class EndScreenController {
 	@FXML
 	Text title;
@@ -19,12 +21,17 @@ public class EndScreenController {
 	@FXML
 	AnchorPane pane;
 
-	private Stage mainStage;
 	private int selected = 1;
 
+	/**
+	 * Creates new instance of EndScreenController 
+	 */
 	public EndScreenController() {
 	}
 
+	/**
+	 * Selects "yes" on screen using javafx's setStyle.
+	 */
 	public void selectYes() {
 		yes.setStyle("-fx-fill:white;");
 		no.setStyle("-fx-fill:black;");
@@ -32,6 +39,9 @@ public class EndScreenController {
 		selected = 1;
 	}
 
+	/**
+	 * Selects "no" on screen using javafx's setStyle.
+	 */
 	public void selectNo() {
 		yes.setStyle("-fx-fill:black;");
 		no.setStyle("-fx-fill:white;");
@@ -39,18 +49,24 @@ public class EndScreenController {
 		selected = 0;
 	}
 
+	/**
+	 * Either continue playing or go to menu.
+	 * if yes selected -> new level
+	 * if no selected -> main menu
+	 * @throws IOException
+	 */
 	public void selected() throws IOException {
 		if (selected == 1) {
-			new Level(this.mainStage);
+			new Level();
 		} else {
-			new MainMenu(this.mainStage);
+			new MainMenu();
 		}
 	}
 
-	public void setStage(Stage stage) {
-		this.mainStage = stage;
-	}
-
+	/**
+	 * Sets title
+	 * @param title
+	 */
 	public void setText(String title) {
 		this.title.setText(title);
 	}

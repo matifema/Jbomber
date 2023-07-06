@@ -7,6 +7,9 @@ import java.util.Random;
 import controllers.LevelController;
 import javafx.scene.image.ImageView;
 
+/**
+ * Bomb object class.
+ */
 public class Bomb {
 	private String placedBy;
 	public boolean isExploded, gameEnded = false;
@@ -15,6 +18,14 @@ public class Bomb {
 	private HashMap<List<Integer>, ImageView> map;
 	private AudioManager audio = new AudioManager();
 
+	/**
+	 * Constructor
+	 * @param levelController
+	 * @param placedX
+	 * @param placedY
+	 * @param placedBy <- enemy/player
+	 * @param expR <- explosion radius
+	 */
 	public Bomb(LevelController level, int placedX, int placedY, String placedBy, int expR) {
 		this.map = level.getMap();
 		this.placedBy = placedBy;
@@ -31,6 +42,9 @@ public class Bomb {
 
 	}
 
+	/**
+	 * Starts explosion countdown, runs method boom() in 1500ms
+	 */
 	public void startCountDown() {
 		new java.util.Timer().schedule(new java.util.TimerTask() {
 			@Override
@@ -41,11 +55,19 @@ public class Bomb {
 		}, 1500);
 	}
 
+	/**
+	 * Plays the boom sound from the AudioManger and calls the explosion() method.
+	 * Also uses the getNearTiles with the position of the bomb and the set explosionRadius.
+	 */
 	private void boom() {
 		this.audio.playBoom();
 		explosion(this.lvl.getNearTiles(x, y, expRadius));
 	}
 
+	/**
+	 * Draws the explosion on the map, checks for damage (player on enemy or enemy on player) and clears the explosion after 200ms.
+	 * @param nearTiles
+	 */
 	private void explosion(List<ImageView> nearTiles) {
 
 		HashMap<List<Integer>, ImageView> map = this.lvl.getMap();
@@ -96,22 +118,30 @@ public class Bomb {
 
 	}
 
+	/**
+	 * Spawns a powerup on the given tile 1/4th of the time.
+	 * Powerups can be:
+	 * 	- Life +1
+	 * 	- Bomb +1 Radius
+	 * 	- Golden +1000 points
+	 * @param tile
+	 */
 	private void spawnPowerUp(ImageView tile) {
 		int rand = new Random().nextInt(0, 3);
 
 		if (rand == 0) {
-			String type = "";
+			PwrUpType type = null;
 			rand = new Random().nextInt(0, 3);
 
 			switch (rand) {
 				case 0:
-					type += "life";
+					type = PwrUpType.LIFE;
 					break;
 				case 1:
-					type += "bomb";
+					type = PwrUpType.BOMB;
 					break;
 				case 2:
-					type += "golden";
+					type = PwrUpType.GOLDEN;
 					break;
 				default:
 					break;
@@ -119,19 +149,28 @@ public class Bomb {
 			this.lvl.powerUps.add(
 					new PowerUp(this.lvl, (int) tile.getLayoutX() / 50, (int) tile.getLayoutY() / 50, type));
 
-			System.out.println("-- spawning.. " + type);
+			System.out.println("-- spawning.. " + type.toString());
 		}
 	}
 
+	/**
+	 * Updates the score depending on the number of distructed walls.
+	 * Called after every (player's) explosion.
+	 */
 	private void updateLevelScore() {
 		this.lvl.addScore(destructedWalls * 100);
 	}
 
+	/**
+	 * Clears the map after the explosion.
+	 * Removes the "boom.png" and replaces it with null (grass background).
+	 * @param nearTiles
+	 */
 	private void clear(List<ImageView> nearTiles) {
 		this.lvl.getEnemies().stream().forEach((e)->{
 			if(e.currentX == this.x && e.currentY == this.y){
 
-				if(e.enemyType.equals("walker")){
+				if(e.enemyType == EnemyType.WALKER){
 					map.get(List.of(x, y)).setImage(Level.walker);
 				}else{
 					map.get(List.of(x, y)).setImage(Level.bomber);
