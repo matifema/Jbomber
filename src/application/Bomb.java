@@ -130,24 +130,26 @@ public class Bomb {
 		int rand = new Random().nextInt(0, 3);
 
 		if (rand == 0) {
-			PwrUpType type = null;
+			PowerUp.PwrUpType type = null;
 			rand = new Random().nextInt(0, 3);
 
 			switch (rand) {
 				case 0:
-					type = PwrUpType.LIFE;
+					type = PowerUp.PwrUpType.LIFE;
 					break;
 				case 1:
-					type = PwrUpType.BOMB;
+					type = PowerUp.PwrUpType.BOMB;
 					break;
 				case 2:
-					type = PwrUpType.GOLDEN;
+					type = PowerUp.PwrUpType.GOLDEN;
 					break;
 				default:
 					break;
 			}
-			this.lvl.powerUps.add(
-					new PowerUp(this.lvl, (int) tile.getLayoutX() / 50, (int) tile.getLayoutY() / 50, type));
+			// create powerup and add lvlcontroller as observer
+			PowerUp pw = new PowerUp(this.lvl, (int) tile.getLayoutX() / 50, (int) tile.getLayoutY() / 50, type);
+			pw.addObserver(lvl);
+			this.lvl.powerUps.add(pw);
 
 			System.out.println("-- spawning.. " + type.toString());
 		}

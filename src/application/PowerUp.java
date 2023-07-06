@@ -1,21 +1,23 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import controllers.LevelController;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-enum PwrUpType{
-	LIFE,
-	BOMB,
-	GOLDEN
-}
-
 /**
  * Powerup Object Class.
  */
 public class PowerUp {
+	public enum PwrUpType{
+		LIFE,
+		BOMB,
+		GOLDEN
+	}
+
+	private List<PowerUpObserver> observers = new ArrayList<>();
 	private HashMap<List<Integer>, ImageView> map;
 	private LevelController lvlController;
 	public boolean collected = false;
@@ -44,6 +46,14 @@ public class PowerUp {
 		map.get(List.of(x, y)).setId("powerup");
 	}
 
+	public void addObserver(PowerUpObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(PowerUpObserver observer) {
+        observers.remove(observer);
+    }
+
 	/**
 	 * Called when a player moves on top of the powerup, collecting it.
 	 * if life -> addLives()
@@ -56,17 +66,18 @@ public class PowerUp {
 		this.lvlController.getMap().get(List.of(this.x, this.y)).setId("");
 
 		System.out.println("-- picked up.. " + this.type);
+		
+		for (PowerUpObserver observer : observers) { // list observers contains only 1 observer...
+			observer.onPowerUpCollected(this.type);
+        }
+	}
 
-		switch (this.type) {
-			case LIFE:
-				this.lvlController.addLives(1);
-				return;
-			case BOMB:
-				this.lvlController.addExpPower(1);
-				return;
-			case GOLDEN:
-				this.lvlController.addScore(1000);
-				return;
-		}
+
+	public int getX(){
+		return x;
+	}
+
+	public int getY(){
+		return y;
 	}
 }

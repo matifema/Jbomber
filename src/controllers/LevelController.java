@@ -17,6 +17,7 @@ import application.Enemy;
 import application.Level;
 import application.Player;
 import application.PowerUp;
+import application.PowerUpObserver;
 import application.save.GameData;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -33,7 +34,7 @@ import javafx.scene.text.Text;
 /**
  * Controller for Level class.
  */
-public class LevelController {
+public class LevelController implements PowerUpObserver{
 	@FXML
 	Text score;
 	@FXML
@@ -202,30 +203,44 @@ public class LevelController {
 	public void movePlayer(int x, int y) {
 		if (this.player.isMoveValid(x, y)) {
 			this.player.movePlayer(this.getMap(), x, y);
-			checkEntities();
+			
+			PowerUp powerUp = checkForPowerUpAtPosition(x, y);
+			if (powerUp != null) {
+				powerUp.onCollect();
+				this.powerUps.remove(powerUp);
+			}
 
 		} else {
 			System.out.println("-- collision detected");
 		}
 	}
 
-	/**
-	 * Checks if the player can collect powerups.
-	 * @return
-	 */
-	private boolean checkEntities() {
-		this.powerUps.stream()
-				.filter(p -> this.player.currentX == p.x && this.player.currentY == p.y)
-				.forEach(p -> {
-					p.onCollect();
-				});
-
-		this.powerUps.removeIf((pwrUp) -> {
-			return pwrUp.collected;
-		}); // rimuove i collezionati
-
-		return false;
+	private PowerUp checkForPowerUpAtPosition(int x, int y) {
+		for (PowerUp powerUp : powerUps) {
+			System.out.println(powerUp.getX()+ " " +powerUp.getY());
+			if (powerUp.getX() == x && powerUp.getY() == y) {
+				return powerUp;
+			}
+		}
+		return null; // Return null if no power-up is found at the position
 	}
+
+	@Override
+    public void onPowerUpCollected(PowerUp.PwrUpType powerUpType) {
+        switch (powerUpType) {
+            case LIFE:
+                addLives(1);
+                break;
+            case BOMB:
+                addExpPower(1);
+                break;
+            case GOLDEN:
+                addScore(1000);
+                break;
+            default:
+                break;
+        }
+    }
 
 	/**
 	 * Checks if a player is on the given x and y, and if true the player takes damage.
