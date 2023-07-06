@@ -2,3 +2,7 @@
 /.vscode/
 /.idea/
 /doc/
+/.gitignore/
+/.project/
+/build.fxbuild/
+/.classpath/
