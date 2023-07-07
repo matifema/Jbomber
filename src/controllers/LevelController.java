@@ -216,6 +216,12 @@ public class LevelController implements PowerUpObserver{
 		}
 	}
 
+	/**
+	 * Checks if there is a power-up at a specific position and returns it if found, or null if not found.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	private PowerUp checkForPowerUpAtPosition(int x, int y) {
 		return powerUps.stream()
 				.filter(powerUp -> powerUp.getX() == x && powerUp.getY() == y)
@@ -223,8 +229,11 @@ public class LevelController implements PowerUpObserver{
 				.orElse(null);
 	}
 
+	/**
+	 * Implementation of the observer interface method
+	 */
 	@Override
-    public void onPowerUpCollected(PowerUp.PwrUpType powerUpType) {
+	public void onPowerUpCollected(PowerUp.PwrUpType powerUpType) {
         switch (powerUpType) {
             case LIFE:
                 addLives(1);

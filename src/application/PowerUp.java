@@ -46,10 +46,18 @@ public class PowerUp {
 		map.get(List.of(x, y)).setId("powerup");
 	}
 
+	/**
+	 * Adds observer to observers list
+	 * @param observer
+	 */
 	public void addObserver(PowerUpObserver observer) {
         observers.add(observer);
     }
 
+	/**
+	 * Removes observer from observers list
+	 * @param observer
+	 */
     public void removeObserver(PowerUpObserver observer) {
         observers.remove(observer);
     }
@@ -72,11 +80,18 @@ public class PowerUp {
         }
 	}
 
-
+	/**
+	 * Returns current x
+	 * @return
+	 */
 	public int getX(){
 		return x;
 	}
 
+	/**
+	 * Returns current y
+	 * @return
+	 */
 	public int getY(){
 		return y;
 	}
