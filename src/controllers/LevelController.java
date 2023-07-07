@@ -7,8 +7,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import application.AudioManager;
 import application.Bomb;
@@ -81,21 +84,19 @@ public class LevelController implements PowerUpObserver{
 	public void populateSpace() {
 		BackgroundImage myBg = new BackgroundImage(Level.grass, BackgroundRepeat.REPEAT, null, BackgroundPosition.DEFAULT,
 				BackgroundSize.DEFAULT);
-
+	
 		tilePane.setBackground(new Background(myBg));
-
-		for (int x = 0; x < nCols; x++) {
-			for (int y = 0; y < nRows; y++) {
+	
+		IntStream.range(0, nCols).boxed().flatMap(x -> 
+			IntStream.range(0, nRows).mapToObj(y -> {
 				ImageView tile = createTile();
 				tile.setId("");
-
-				tilePane.getChildren().add(tile);
 				map.put(List.of(x, y), tile);
-
-			}
-		}
+				return tile;
+			})
+		).forEach(tilePane.getChildren()::add);
 	}
-
+	
 	/**
 	 * Renders the undestructible border around and inside the level.
 	 */
@@ -106,7 +107,7 @@ public class LevelController implements PowerUpObserver{
 
 		for (int y = 0; y < nRows; y++) {
 			for (int x = 0; x < nCols; x++) {
-				if (x == 0 || y == 0|| x == nCols - 1 || y == nRows - 1) {
+				if (x == 0 || y == 0 || x == nCols - 1 || y == nRows - 1) {
 					map.get(List.of(x, y)).setImage(Level.border);
 					map.get(List.of(x, y)).setId("border");
 					map.get(List.of(x, y)).setEffect(ca);
@@ -319,30 +320,22 @@ public class LevelController implements PowerUpObserver{
 	 */
 	public List<ImageView> getNearTiles(int x, int y, int radius) {
 		int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-		List<ImageView> nearWalls = new LinkedList<>();
 		Set<List<Integer>> visited = new HashSet<>();
 		List<Integer> pos = List.of(x, y);
-
+	
+		List<ImageView> nearWalls = new ArrayList<>();
 		nearWalls.add(map.get(pos));
 		visited.add(pos);
-
-		for (int[] dir : directions) {
-			pos = List.of(x, y);
-			for (int i = 1; i <= radius; i++) {
-				pos = Arrays.asList(pos.get(0) + dir[0], pos.get(1) + dir[1]);
-				if (!visited.add(pos)) {
-					break;
-				}
-				ImageView tile = map.get(pos);
-
-				if (map.values().contains(tile)) {
-					if (tile.getId().equals("border")) {
-						break;
-					}
-					nearWalls.add(tile);
-				}
-			}
-		}
+	
+		nearWalls.addAll(Arrays.stream(directions)
+			.flatMap(dir -> IntStream.rangeClosed(1, radius)
+				.mapToObj(i -> Arrays.asList(pos.get(0) + dir[0]*i, pos.get(1) + dir[1]*i))
+				.filter(visited::add)
+				.map(map::get)
+				.takeWhile(Objects::nonNull)
+				.takeWhile(tile -> !tile.getId().equals("border")))
+			.collect(Collectors.toList()));
+	
 		return nearWalls;
 	}
 

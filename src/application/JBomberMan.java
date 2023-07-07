@@ -14,7 +14,7 @@ public class JBomberMan extends Application {
 		
 		new MainMenu();
 		
-		stage.setTitle("JBomber");
+		stage.setTitle("JBomberMan");
 		stage.sizeToScene();
 		stage.setMaxWidth(850);
 		stage.show();
