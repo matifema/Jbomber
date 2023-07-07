@@ -204,7 +204,7 @@ public class LevelController implements PowerUpObserver{
 		if (this.player.isMoveValid(x, y)) {
 			this.player.movePlayer(this.getMap(), x, y);
 			
-			PowerUp powerUp = checkForPowerUpAtPosition(x, y);
+			PowerUp powerUp = checkForPowerUpAtPosition(this.player.getX(), this.player.getY());
 			if (powerUp != null) {
 				powerUp.onCollect();
 				this.powerUps.remove(powerUp);
@@ -216,13 +216,10 @@ public class LevelController implements PowerUpObserver{
 	}
 
 	private PowerUp checkForPowerUpAtPosition(int x, int y) {
-		for (PowerUp powerUp : powerUps) {
-			System.out.println(powerUp.getX()+ " " +powerUp.getY());
-			if (powerUp.getX() == x && powerUp.getY() == y) {
-				return powerUp;
-			}
-		}
-		return null; // Return null if no power-up is found at the position
+		return powerUps.stream()
+				.filter(powerUp -> powerUp.getX() == x && powerUp.getY() == y)
+				.findFirst()
+				.orElse(null);
 	}
 
 	@Override
